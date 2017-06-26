@@ -1,8 +1,10 @@
  
 # Arkanoid-Project
-Featured Arkanoid game with Python Flask JS stack
+Featured Arkanoid Game 
 
-For gae setup run in a shell:
+Tech stack: Python, Flask, JS 
+
+For game setup run in a shell:
 
 <code>$ source setup.sh</code>
 
