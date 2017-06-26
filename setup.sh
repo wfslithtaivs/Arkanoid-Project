@@ -1,3 +1,8 @@
+virtualenv env 
+source env/bin/activate
+
+pip install -r requirements.txt
+
 if [ "$( psql -tAc "SELECT 1 FROM pg_database WHERE datname='games'" )" = '1' ] 
     then 
         dropdb games 
@@ -16,3 +21,5 @@ if [ -f dump.txt ]
         python seed.py
         echo "DB data seeded"
     fi
+
+python server.py
