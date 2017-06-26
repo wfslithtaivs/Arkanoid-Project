@@ -1,1 +1,78 @@
- 
+"""Models and database functions for games db."""
+
+from flask_sqlalchemy import SQLAlchemy
+
+# create ORM object to interact with db
+db = SQLAlchemy()
+
+############## Object Model #############################
+
+
+class User(db.Model):
+    """User class"""
+
+    __tablename__ = "users"
+
+    user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    username = db.Column(db.String(50))
+    password_token = db.Column(db.String(50))
+
+    ## add relation Games
+
+class Game(db.Model):
+    """Game class"""
+
+    __tablename__ = "games"
+
+    game_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    game_stats = db.Column(db.String(256))
+    saved_game_path = db.Column(db.String(256))
+    t_stamp = db.Column(db.Datetime)
+
+    ## add relation Users
+
+
+class Session(db.Model):
+    """Session class to keep track of user interactions with existing games"""
+
+    __tablename__ = "sessions"
+
+    session_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    game_id = db.Column(db.Integer, ForeignKey('games.game_id'))
+    user_id = db.Column(db.Integer, ForeignKey('users.user_id'))
+    t_stamp = db.Column(db.Datetime)
+
+
+
+
+##########################################################
+# Helper functions
+
+
+def init_app():
+    from flask import Flask
+    app = Flask(__name__)
+
+    connect_to_db(app)
+    print "Connected to DB."
+
+
+def connect_to_db(app):
+    """Connect the database to Flask app."""
+
+    # Configure to use our database
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres:///games'
+    # Print in log corresponding SQL queries
+    app.config['SQLALCHEMY_ECHO'] = True
+    # Link db to flask application
+    db.app = app
+    db.init_app(app)
+
+if __name__ == "__main__":
+
+    from flask import Flask
+
+    app = Flask(__name__)
+
+    connect_to_db(app)
+    print "Connected to DB."
