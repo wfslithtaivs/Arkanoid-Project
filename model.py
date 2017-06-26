@@ -15,7 +15,7 @@ class User(db.Model):
 
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(50))
-    password_token = db.Column(db.String(50))
+    password_token = db.Column(db.String(256))
 
     ## add relation Games
 
@@ -27,7 +27,7 @@ class Game(db.Model):
     game_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     game_stats = db.Column(db.String(256))
     saved_game_path = db.Column(db.String(256))
-    t_stamp = db.Column(db.Datetime)
+    t_stamp = db.Column(db.DateTime)
 
     ## add relation Users
 
@@ -38,11 +38,9 @@ class Session(db.Model):
     __tablename__ = "sessions"
 
     session_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    game_id = db.Column(db.Integer, ForeignKey('games.game_id'))
-    user_id = db.Column(db.Integer, ForeignKey('users.user_id'))
-    t_stamp = db.Column(db.Datetime)
-
-
+    game_id = db.Column(db.Integer, db.ForeignKey('games.game_id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    t_stamp = db.Column(db.DateTime)
 
 
 ##########################################################
@@ -54,6 +52,7 @@ def init_app():
     app = Flask(__name__)
 
     connect_to_db(app)
+
     print "Connected to DB."
 
 
@@ -64,9 +63,11 @@ def connect_to_db(app):
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres:///games'
     # Print in log corresponding SQL queries
     app.config['SQLALCHEMY_ECHO'] = True
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     # Link db to flask application
     db.app = app
     db.init_app(app)
+
 
 if __name__ == "__main__":
 
@@ -75,4 +76,5 @@ if __name__ == "__main__":
     app = Flask(__name__)
 
     connect_to_db(app)
+
     print "Connected to DB."
