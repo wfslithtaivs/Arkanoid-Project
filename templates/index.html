@@ -1,169 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/styles.css" rel="stylesheet">
     <title> Arkanoid Project</title>
-    <style>
-        /* Full-width input fields */
-        input[type=text], input[type=password] {
-            width: 100%;
-            padding: 12px 20px;
-            margin: 8px 0;
-            display: inline-block;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-
-        /* Set a style for all buttons */
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 14px 20px;
-            margin: 8px 0;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        button:hover {
-            opacity: 0.8;
-        }
-
-        /* Extra styles for the cancel button */
-        .cancelbtn {
-            width: auto;
-            padding: 10px 18px;
-            background-color: #f44336;
-        }
-
-        /* Center the image and position the close button */
-        .imgcontainer {
-            text-align: center;
-            margin: 24px 0 12px 0;
-            position: relative;
-        }
-
-        img.avatar {
-            width: 40%;
-            border-radius: 50%;
-        }
-
-        .container {
-            padding: 16px;
-        }
-
-        span.psw {
-            float: right;
-            padding-top: 16px;
-        }
-
-        /* The Modal (background) */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-            padding-top: 60px;
-        }
-
-        /* Modal Content/Box */
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
-            border: 1px solid #888;
-            width: 80%; /* Could be more or less, depending on screen size */
-        }
-
-        /* The Close Button (x) */
-        .close {
-            position: absolute;
-            right: 25px;
-            top: 0;
-            color: #000;
-            font-size: 35px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: red;
-            cursor: pointer;
-        }
-
-        /* Add Zoom Animation */
-        .animate {
-            -webkit-animation: animatezoom 0.6s;
-            animation: animatezoom 0.6s
-        }
-
-        @-webkit-keyframes animatezoom {
-            from {-webkit-transform: scale(0)} 
-            to {-webkit-transform: scale(1)}
-        }
-            
-        @keyframes animatezoom {
-            from {transform: scale(0)} 
-            to {transform: scale(1)}
-        }
-
-        /* Change styles for span and cancel button on extra small screens */
-        @media screen and (max-width: 300px) {
-            span.psw {
-               display: block;
-               float: none;
-            }
-            .cancelbtn {
-               width: 100%;
-            }
-        }
-    </style>
 </head>
 
 <body>
-    <h1>Welcome to Arkanoid Project </h1>
-
-    {% if session.get('current_user') %}
-
-      <button onclick="window.location.href='/logout'" style="width:auto;">Logout</button>
-   
-    {% else %}
-            <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
-
-        <div id="id01" class="modal">
-          
-          <form class="modal-content animate" action="/login_user">
-            <div class="imgcontainer">
-              <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-              <img src="img_avatar2.png" alt="Avatar" class="avatar">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-6 centered-text">
+                <h1>Welcome to Arkanoid Project </h1>
             </div>
+            <div class="col-xs-6">
+                {% if session.get('current_user') %}
+                    <button onclick="window.location.href='/logout'" style="width:auto;">Logout</button>
+                {% else %}
+                    <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
 
-            <div class="container">
-              <label><b>Username</b></label>
-              <input type="text" placeholder="Enter Username" name="username" required>
+                    <div id="id01" class="modal">
+                      
+                      <form class="modal-content animate" action="/login_user">
+                        <div class="imgcontainer">
+                          <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+                          <img src="static/img/img_avatar.png" alt="Avatar" class="avatar">
+                        </div>
 
-              <label><b>Password</b></label>
-              <input type="password" placeholder="Enter Password" name="password" required>
-                
-              <button type="submit">Login</button>
+                        <div class="container" style="width:auto">
+                          <label><b>Username</b></label>
+                          <input type="text" placeholder="Enter Username" name="username" required>
 
-              <input type="checkbox" checked="checked"> Remember me
+                          <label><b>Password</b></label>
+                          <input type="password" placeholder="Enter Password" name="password" required>
+                            
+                          <button type="submit">Login</button>
+                        </div>
+                        <div class="container">
+                          <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+                        </div>
+                      </form>
+                    </div>
+                {% endif %}
             </div>
-
-            <div class="container" style="background-color:#f1f1f1">
-              <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
-              <span class="psw">Forgot <a href="#">password?</a></span>
-            </div>
-          </form>
         </div>
-    
-
-    {% endif %}
-
+        <br >
+        <div class="row">
+          <input type="button" id="play-game" value="Play">
+          <input type="button" id="stop-game" value="Stop">
+          <input type="button" id="pause-game" value="Pause">
+        </div>
+        <br >
+        <div class="row">
+          <canvas id="myCanvas" width="400" height="400" style="border:1px solid #c3c3c3;"></canvas>
+          <p id="game_stat"></p>
+        </div>  
+</div>
     <script>
         // Get the modal
         var modal = document.getElementById('id01');
@@ -174,6 +65,72 @@
                 modal.style.display = "none";
             }
         }
+
+        // Canvas setup
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        var x=150;
+        var y=150;
+        var dx=5;
+        var dy=5;
+        ctx.fillStyle = "#FF0000";
+
+
+        play = document.getElementById("play-game");
+
+        play.addEventListener("click", start_game);
+
+        function start_game(){
+          interval = setInterval(draw, 25);          
+        }
+
+        function draw(){
+          ctx.clearRect(0,0, 400,400);
+          ctx.beginPath();
+          ctx.fillStyle="#0000ff";
+
+          // create brick 
+          ctx.fillStyle = "#FF0000";
+          var brick_x = 75;
+          var brick_y = 75;
+          var brick_center = 30;
+          ctx.fillRect(brick_center, brick_center, brick_x, brick_y);
+
+          // Draws a circle of radius 20 at the coordinates 100,100 on the canvas
+          ctx.arc(x, y, 20, 0, Math.PI*2, true);
+          ctx.closePath();
+          ctx.fill();
+
+            // Boundary Logic
+                if( x<20 || x>380) dx=-dx; 
+                if( y<20 || y>380) dy=-dy; 
+                if( x < brick_x + brick_center - 20) dx = -dx;
+                if (y < brick_y + brick_center - 20) dy = -dy;
+          x+=dx;
+          y+=dy;
+        }
+
+        function stop_game(){
+          clearInterval(interval);
+          stat = document.getElementById("game_stat");
+          stat.innerHTML = "x=" + x + ", y=" + y + ", dx=" + dx + ", dy=" +  dy;
+
+          var canvas = document.getElementById("myCanvas");
+          var ctx = canvas.getContext("2d");
+          ctx.clearRect(0,0, 400,400);
+
+          x = 150;
+          y = 150;
+          dx = 5;
+          dy = 5;
+        }
+
+        stop = document.getElementById("stop-game");
+        stop.addEventListener("click", stop_game);
+        
+
+
     </script>
+
 </body>
 </html>
