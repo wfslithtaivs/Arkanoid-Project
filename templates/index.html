@@ -51,86 +51,10 @@
         </div>
         <br >
         <div class="row">
-          <canvas id="myCanvas" width="400" height="400" style="border:1px solid #c3c3c3;"></canvas>
+          <canvas id="myCanvas" width="480" height="320" style="border:1px solid #c3c3c3;"></canvas>
           <p id="game_stat"></p>
         </div>  
 </div>
-    <script>
-        // Get the modal
-        var modal = document.getElementById('id01');
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-
-        // Canvas setup
-        var canvas = document.getElementById("myCanvas");
-        var ctx = canvas.getContext("2d");
-        var x=150;
-        var y=150;
-        var dx=5;
-        var dy=5;
-        ctx.fillStyle = "#FF0000";
-
-
-        play = document.getElementById("play-game");
-
-        play.addEventListener("click", start_game);
-
-        function start_game(){
-          interval = setInterval(draw, 25);          
-        }
-
-        function draw(){
-          ctx.clearRect(0,0, 400,400);
-          ctx.beginPath();
-          ctx.fillStyle="#0000ff";
-
-          // create brick 
-          ctx.fillStyle = "#FF0000";
-          var brick_x = 75;
-          var brick_y = 75;
-          var brick_center = 30;
-          ctx.fillRect(brick_center, brick_center, brick_x, brick_y);
-
-          // Draws a circle of radius 20 at the coordinates 100,100 on the canvas
-          ctx.arc(x, y, 20, 0, Math.PI*2, true);
-          ctx.closePath();
-          ctx.fill();
-
-            // Boundary Logic
-                if( x<20 || x>380) dx=-dx; 
-                if( y<20 || y>380) dy=-dy; 
-                if( x < brick_x + brick_center - 20) dx = -dx;
-                if (y < brick_y + brick_center - 20) dy = -dy;
-          x+=dx;
-          y+=dy;
-        }
-
-        function stop_game(){
-          clearInterval(interval);
-          stat = document.getElementById("game_stat");
-          stat.innerHTML = "x=" + x + ", y=" + y + ", dx=" + dx + ", dy=" +  dy;
-
-          var canvas = document.getElementById("myCanvas");
-          var ctx = canvas.getContext("2d");
-          ctx.clearRect(0,0, 400,400);
-
-          x = 150;
-          y = 150;
-          dx = 5;
-          dy = 5;
-        }
-
-        stop = document.getElementById("stop-game");
-        stop.addEventListener("click", stop_game);
-        
-
-
-    </script>
-
+    <script src="static/script.js"></script>
 </body>
 </html>
