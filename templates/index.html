@@ -42,17 +42,25 @@
                     </div>
                 {% endif %}
             </div>
+            <div class="row">
+              <img src="static/img/bricks.jpg" style="display:none;" id="brick_img" height="42" width="42">
+            </div>
         </div>
         <br >
         <div class="row">
-          <input type="button" id="play-game" value="Play">
-          <input type="button" id="stop-game" value="Stop">
-          <input type="button" id="pause-game" value="Pause">
+          <div class="col-xs-6 centered-text">
+            <input type="button" id="play-game" value="Play">
+            <input type="button" id="stop-game" value="Stop">
+            <input type="button" id="pause-game" value="Pause">
+          </div>
         </div>
         <br >
         <div class="row">
-          <canvas id="myCanvas" width="480" height="320" style="border:1px solid #c3c3c3;"></canvas>
-          <p id="game_stat"></p>
+            <div class="col-xs-6 centered-text">
+              <canvas id="myCanvas" width="480" height="320" style="border:1px solid #c3c3c3;"></canvas>
+              <p id="game_progress"></p>
+              <p id="game_stat"></p>
+            </div>
         </div>  
 </div>
     <script src="static/script.js"></script>

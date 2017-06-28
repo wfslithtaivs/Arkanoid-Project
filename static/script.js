@@ -9,8 +9,10 @@ window.onclick = function(event) {
 }
 
 // Canvas setup
+
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
+
 var ballRadius = 10;
 var x = canvas.width/2;
 var y = canvas.height-30;
@@ -31,12 +33,52 @@ var brickOffsetLeft = 30;
 var score = 0;
 var lives = 3;
 var bricks = [];
+var game_in_progress = true;
+var progress = document.getElementById("game_progress");
+var stat = document.getElementById("game_stat");
+
 for(c=0; c<brickColumnCount; c++) {
+
     bricks[c] = [];
     for(r=0; r<brickRowCount; r++) {
         bricks[c][r] = { x: 0, y: 0, status: 1 };
     }
 }
+
+
+// Canvas setup
+function init() {
+  ballRadius = 10;
+  x = canvas.width/2;
+  y = canvas.height-30;
+  dx = 2;
+  dy = -2;
+  paddleHeight = 10;
+  paddleWidth = 75;
+  paddleX = (canvas.width-paddleWidth)/2;
+  rightPressed = false;
+  leftPressed = false;
+  brickRowCount = 5;
+  brickColumnCount = 3;
+  brickWidth = 75;
+  brickHeight = 20;
+  brickPadding = 10;
+  brickOffsetTop = 30;
+  brickOffsetLeft = 30;
+  score = 0;
+  lives = 3;
+  bricks = [];
+  game_in_progress = true;
+
+  for(c=0; c<brickColumnCount; c++) {
+
+      bricks[c] = [];
+      for(r=0; r<brickRowCount; r++) {
+          bricks[c][r] = { x: 0, y: 0, status: 1 };
+      }
+  }
+}
+
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("mousemove", mouseMoveHandler, false);
@@ -73,8 +115,8 @@ function collisionDetection() {
                     b.status = 0;
                     score++;
                     if(score == brickRowCount*brickColumnCount) {
-                        alert("YOU WIN, CONGRATS!");
-                        document.location.reload();
+                      progress.innerHTML = "YOU WIN";
+                      stop_game();
                     }
                 }
             }
@@ -104,9 +146,13 @@ function drawBricks() {
                 bricks[c][r].x = brickX;
                 bricks[c][r].y = brickY;
                 ctx.beginPath();
-                ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                ctx.fillStyle = "#0095DD";
-                ctx.fill();
+                var img=document.getElementById("brick_img");
+                ctx.drawImage(img, brickX, brickY);
+
+                // ctx.rect(brickX, brickY, brickWidth, brickHeight);
+
+                // ctx.fillStyle = "#0095DD";
+                // ctx.fill();
                 ctx.closePath();
             }
         }
@@ -123,63 +169,85 @@ function drawLives() {
     ctx.fillText("Lives: "+lives, canvas.width-65, 20);
 }
 function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawBricks();
-    drawBall();
-    drawPaddle();
-    drawScore();
-    drawLives();
-    collisionDetection();
-    if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
-        dx = -dx;
+    if(game_in_progress == true) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawBricks();
+      drawBall();
+      drawPaddle();
+      drawScore();
+      drawLives();
+      collisionDetection();
+      if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
+          dx = -dx;
+      }
+      if(y + dy < ballRadius) {
+          dy = -dy;
+      }
+      else if(y + dy > canvas.height-ballRadius) {
+          if(x > paddleX && x < paddleX + paddleWidth) {
+              dy = -dy;
+          }
+          else {
+              lives--;
+              if(!lives) {
+                  progress.innerHTML = "GAME OVER";
+                  // document.location.reload();
+                  return;
+              }
+              else {
+                  x = canvas.width/2;
+                  y = canvas.height-30;
+                  dx = 3;
+                  dy = -3;
+                  paddleX = (canvas.width-paddleWidth)/2;
+              }
+          }
+      }
+      if(rightPressed && paddleX < canvas.width-paddleWidth) {
+          paddleX += 7;
+      }
+      else if(leftPressed && paddleX > 0) {
+          paddleX -= 7;
+      }
+      x += dx;
+      y += dy;
+
+      requestAnimationFrame(draw);
     }
-    if(y + dy < ballRadius) {
-        dy = -dy;
-    }
-    else if(y + dy > canvas.height-ballRadius) {
-        if(x > paddleX && x < paddleX + paddleWidth) {
-            dy = -dy;
-        }
-        else {
-            lives--;
-            if(!lives) {
-                alert("GAME OVER");
-                document.location.reload();
-            }
-            else {
-                x = canvas.width/2;
-                y = canvas.height-30;
-                dx = 3;
-                dy = -3;
-                paddleX = (canvas.width-paddleWidth)/2;
-            }
-        }
-    }
-    if(rightPressed && paddleX < canvas.width-paddleWidth) {
-        paddleX += 7;
-    }
-    else if(leftPressed && paddleX > 0) {
-        paddleX -= 7;
-    }
-    x += dx;
-    y += dy;
-    requestAnimationFrame(draw);
 }
 
 play = document.getElementById("play-game");
-play.addEventListener("click", draw);
+play.addEventListener("click", function () {
+  if (progress.innerHTML == "GAME STOPPED") {
+    init();
+  }
+  progress.innerHTML = "";
+  game_in_progress = true;
+  draw();
+});
  
 function stop_game(){
-    stat = document.getElementById("game_stat");
     stat.innerHTML = "x=" + x + ", y=" + y + ", dx=" + dx + ", dy=" +  dy;
+
+    game_in_progress = false;
 
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    stat = document.getElementById("game_stat");
-    stat.innerHTML = "x=" + x + ", y=" + y + ", dx=" + dx + ", dy=" +  dy;
+    progress.innerHTML = "GAME STOPPED";
 }
  
 stop = document.getElementById("stop-game");
-stop.addEventListener("click", stop_game);  
+stop.addEventListener("click", stop_game);
+
+
+function pause_game(env){
+    game_in_progress = false;
+
+    progress.innerHTML = "GAME PAUSED";
+}
+
+pause = document.getElementById("pause-game");
+pause.addEventListener("click", pause_game);
+
 
