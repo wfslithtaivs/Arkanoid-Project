@@ -1,3 +1,4 @@
 *.pyc
 env/
 brick.html
+static/img/bricks.jpg~

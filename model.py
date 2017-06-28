@@ -16,6 +16,7 @@ class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(50))
     password_token = db.Column(db.String(256))
+    avatar = db.Column(db.String(256), default="static/img/bowie_ipsum.jpg") # store relative path to user-avatar
 
     ## add relation Games
 

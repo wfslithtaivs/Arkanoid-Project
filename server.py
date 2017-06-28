@@ -44,6 +44,8 @@ def login_user():
         if pbkdf2_sha256.verify(password, user.password_token):
             flash('You were successfully logged in')
             session["current_user"] = user.user_id
+            session["avatar"] = user.avatar
+            session["name"] = user.username
             return redirect("/")
             # return redirect("users/{}".format(user.user_id))
         else:
@@ -68,34 +70,48 @@ def logout():
     return redirect('/')
 
 
-@app.route("/register", methods=["GET", "POST"])
+@app.route("/register", methods=["POST"])
 def register_process():
     """Display registration form and register user in DB"""
 
-    if request.method == 'POST':
-        # since we have a POST request, lookup for arguments in request.form
-        username = request.form.get('username')
-        password = request.form.get('password')
+    username = request.form.get('username')
+    password = request.form.get('password')
+    is_avatar = request.form.get('want_avatar')
 
-        query = User.query.filter_by(username = username).first() 
+    raise "!!"
 
-        # check if user already in DB, if not - add him
-        if query:
-            flash("Already in DB")
-        else:
-            # encrypt password with salty hash
-            password_token = pbkdf2_sha256.hash(password)
-            username = User(username=username,
-                         password_token=password_token)
-            db.session.add(user)
-            db.session.commit()
-            flash("New user - {} - succesfully created".format(username))
+    query = User.query.filter_by(username = username).first() 
 
+    # check if user already in DB, if not - add him
+    if query:
+        flash("Already in DB")
+    else:
+        # encrypt password with salty hash
+        password_token = pbkdf2_sha256.hash(password)
+
+        if is_avatar == 'true':
+            pass
+
+        user = User(username=username,
+                     password_token=password_token)
+        db.session.add(user)
+        db.session.commit()
+        flash("New user - {} - succesfully created".format(username))
+    
+    return redirect("/")
+
+@app.route("/users/<user_id>")
+def user_profile(user_id):
+    """Render current user profile"""
+
+    current_user = session.get("current_user")
+    if current_user:
+        c_user_id = User.query.filter_by(username = current_user.username).first().user_id
+        if c_user_id == user_id:
+            return render_template("user_profile.html")
+    else: 
+        flash("For some reasons, you are not allowed to see this profile")
         return redirect("/")
-    elif request.method == "GET":
-        """Displays registration form"""
-
-        return render_template("register_form.html")
 
 
 if __name__ == "__main__":

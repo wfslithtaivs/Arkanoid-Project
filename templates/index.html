@@ -1,68 +1,31 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <link href="static/styles.css" rel="stylesheet">
-    <title> Arkanoid Project</title>
-</head>
 
-<body>
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-6 centered-text">
-                <h1>Welcome to Arkanoid Project </h1>
-            </div>
-            <div class="col-xs-6">
-                {% if session.get('current_user') %}
-                    <button onclick="window.location.href='/logout'" style="width:auto;">Logout</button>
-                {% else %}
-                    <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
+{% extends "_base.html" %}
+{% block title%} Arkanoid Project {% endblock %}
+{% block content %}
+ 
+  <div class="row">
+    <h1>Arkanoid Project </h1>
+  </div>
 
-                    <div id="id01" class="modal">
-                      
-                      <form class="modal-content animate" action="/login_user">
-                        <div class="imgcontainer">
-                          <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-                          <img src="static/img/img_avatar.png" alt="Avatar" class="avatar">
-                        </div>
+  <div class="row">
+    <img src="static/img/bricks.png" style="display:none;" id="brick_img" height="42" width="42">
+  </div>
 
-                        <div class="container" style="width:auto">
-                          <label><b>Username</b></label>
-                          <input type="text" placeholder="Enter Username" name="username" required>
+  <div class="row">
+      <input type="button" class="btn btn-outline-primary" id="play-game" value="Play">
+      <input type="button" class="btn btn-outline-primary" id="stop-game" value="Stop">
+      <input type="button" class="btn btn-outline-primary" id="pause-game" value="Pause">
+  </div>
 
-                          <label><b>Password</b></label>
-                          <input type="password" placeholder="Enter Password" name="password" required>
-                            
-                          <button type="submit">Login</button>
-                        </div>
-                        <div class="container">
-                          <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
-                        </div>
-                      </form>
-                    </div>
-                {% endif %}
-            </div>
-            <div class="row">
-              <img src="static/img/bricks.jpg" style="display:none;" id="brick_img" height="42" width="42">
-            </div>
-        </div>
-        <br >
-        <div class="row">
-          <div class="col-xs-6 centered-text">
-            <input type="button" id="play-game" value="Play">
-            <input type="button" id="stop-game" value="Stop">
-            <input type="button" id="pause-game" value="Pause">
-          </div>
-        </div>
-        <br >
-        <div class="row">
-            <div class="col-xs-6 centered-text">
-              <canvas id="myCanvas" width="480" height="320" style="border:1px solid #c3c3c3;"></canvas>
-              <p id="game_progress"></p>
-              <p id="game_stat"></p>
-            </div>
-        </div>  
-</div>
-    <script src="static/script.js"></script>
-</body>
-</html>
+  <br >
+  <div class="row">
+    <canvas id="myCanvas" width="480" height="320" style="border:1px solid #c3c3c3;"></canvas>
+  </div>
+  <br >
+  <div class="row">
+      <p id="game_progress"></p>
+      <p id="game_stat"></p>
+
+ </div>  
+ 
+ {% endblock %}

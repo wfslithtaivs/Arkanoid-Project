@@ -5,7 +5,7 @@
 }
 
 .brick {
-  background-image: url("static/img/bricks.jpg");
+  background-image: url("static/img/bricks.png");
   height: 20px;
   width: 80px;
 }
@@ -56,6 +56,11 @@ img.avatar {
 
 .container {
     padding: 16px;
+    width: 80%;
+}
+
+.window_container {
+    width: 50%;
 }
 
 span.psw {
