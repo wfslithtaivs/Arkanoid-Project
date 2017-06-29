@@ -1,0 +1,35 @@
+
+{% extends "_base.html" %}
+{% block title%} Arkanoid Project Profile for {{session.get('name')}}{% endblock %}
+{% block content %}
+
+<div class="row" >
+
+    <p> Statistic is comming </p>
+    <p> Hope you are doing good so far. Current time is {{time}} and it is a perfect moment to have some tea, isn't it?</p>
+
+    <button id="show">Click me</button>
+
+    <img style="display:none;" id="surprise" src="../static/img/dav_hooray.gif" width="480" height="192" frameBorder="0" class="giphy-embed" allowFullScreen></img>
+
+</div>
+<br>
+<div class="row">
+    <form action="/">
+        <input type="submit" value="Game page" class="btn btn-outline-primary" >
+    </form>
+</div>
+
+<script src="http://code.jquery.com/jquery.js"></script>
+
+<script>
+    "use strict";       
+
+    $('button#show').on('click', function f() {
+        var image = $("img#surprise");
+        image.fadeIn(2000);
+    });
+
+</script>
+{% endblock %}
+

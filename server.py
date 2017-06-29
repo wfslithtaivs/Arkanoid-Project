@@ -5,6 +5,9 @@ from jinja2 import StrictUndefined
 from flask import Flask, jsonify, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 from passlib.hash import pbkdf2_sha256
+import urllib2
+import json
+from datetime import datetime
 ## find urlsafe_token method!
 
 # Init Flask application and attach db
@@ -77,10 +80,9 @@ def register_process():
     username = request.form.get('username')
     password = request.form.get('password')
     is_avatar = request.form.get('want_avatar')
+    avatar = None
 
-    raise "!!"
-
-    query = User.query.filter_by(username = username).first() 
+    query = User.query.filter_by(username = username).first()
 
     # check if user already in DB, if not - add him
     if query:
@@ -90,14 +92,22 @@ def register_process():
         password_token = pbkdf2_sha256.hash(password)
 
         if is_avatar == 'true':
-            pass
+            url_data = urllib2.urlopen("https://randomuser.me/api/?inc=picture").read()
+            pic_data = json.loads(url_data)['results'][0]
+            avatar = pic_data.get('picture')['large']
 
-        user = User(username=username,
-                     password_token=password_token)
+        if avatar:
+            user = User(username=username,
+                        password_token=password_token,
+                        avatar=avatar)
+        else:
+            user = User(username=username,
+                        password_token=password_token)
+
         db.session.add(user)
         db.session.commit()
         flash("New user - {} - succesfully created".format(username))
-    
+
     return redirect("/")
 
 @app.route("/users/<user_id>")
@@ -105,13 +115,26 @@ def user_profile(user_id):
     """Render current user profile"""
 
     current_user = session.get("current_user")
+    user_id = int(user_id)
+
     if current_user:
-        c_user_id = User.query.filter_by(username = current_user.username).first().user_id
+        c_user_id = User.query.filter_by(user_id=current_user).first()
+        c_user_id = c_user_id.user_id
         if c_user_id == user_id:
-            return render_template("user_profile.html")
-    else: 
+            return render_template("user_profile.html", time=datetime.now())
+    else:
         flash("For some reasons, you are not allowed to see this profile")
-        return redirect("/")
+
+    return redirect("/")
+
+
+@app.route("/users")
+def users():
+    """List all the users with avatars"""
+
+    users = User.query.all()
+
+    return render_template("users.html", users=users)
 
 
 if __name__ == "__main__":

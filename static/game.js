@@ -1,3 +1,5 @@
+console.log("starting");
+
   // Get the modal
 var modal = document.getElementById('id01');
 
@@ -44,7 +46,6 @@ for(c=0; c<brickColumnCount; c++) {
         bricks[c][r] = { x: 0, y: 0, status: 1 };
     }
 }
-
 
 // Canvas setup
 function init() {
@@ -169,6 +170,7 @@ function drawLives() {
     ctx.fillText("Lives: "+lives, canvas.width-65, 20);
 }
 function draw() {
+  console.log("starting to draw game");
     if(game_in_progress == true) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawBricks();
@@ -212,18 +214,24 @@ function draw() {
       x += dx;
       y += dy;
 
-      requestAnimationFrame(draw);
+      // requestAnimationFrame(draw); // infinite recursion kills browsers
+      // way out - setInterval(draw, 25);
     }
 }
 
+// disable play button when game in progress and doesn;t stopped
+// change pause at resume and let to push it to resume game
+// enable save game only when paused
+
 play = document.getElementById("play-game");
 play.addEventListener("click", function () {
+  console.log("play button clicked");
   if (progress.innerHTML == "GAME STOPPED") {
     init();
   }
   progress.innerHTML = "";
   game_in_progress = true;
-  draw();
+  setInterval(draw, 25);
 });
  
 function stop_game(){
@@ -249,5 +257,4 @@ function pause_game(env){
 
 pause = document.getElementById("pause-game");
 pause.addEventListener("click", pause_game);
-
 

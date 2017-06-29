@@ -16,9 +16,10 @@ class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(50))
     password_token = db.Column(db.String(256))
-    avatar = db.Column(db.String(256), default="static/img/bowie_ipsum.jpg") # store relative path to user-avatar
+    avatar = db.Column(db.String(256), default="../static/img/bowie_ipsum.jpg") # store relative path to user-avatar
 
     ## add relation Games
+    games = db.relationship('Game')
 
 class Game(db.Model):
     """Game class"""
@@ -26,11 +27,10 @@ class Game(db.Model):
     __tablename__ = "games"
 
     game_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     game_stats = db.Column(db.String(256))
     saved_game_path = db.Column(db.String(256))
     t_stamp = db.Column(db.DateTime)
-
-    ## add relation Users
 
 
 class Session(db.Model):
@@ -39,7 +39,6 @@ class Session(db.Model):
     __tablename__ = "sessions"
 
     session_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    game_id = db.Column(db.Integer, db.ForeignKey('games.game_id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     t_stamp = db.Column(db.DateTime)
 
