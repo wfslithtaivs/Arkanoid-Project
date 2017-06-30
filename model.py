@@ -1,6 +1,7 @@
 """Models and database functions for games db."""
 
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 # create ORM object to interact with db
 db = SQLAlchemy()
@@ -28,9 +29,10 @@ class Game(db.Model):
 
     game_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    game_stats = db.Column(db.String(256))
-    saved_game_path = db.Column(db.String(256))
-    t_stamp = db.Column(db.DateTime)
+    game_stats = db.Column(db.String(256), default="in progress")
+    last_saving = db.Column(db.JSON)
+    t_stamp = db.Column(db.DateTime, default=datetime.now())
+    #  add level information to game
 
 
 class Session(db.Model):
@@ -45,8 +47,6 @@ class Session(db.Model):
 
 ##########################################################
 # Helper functions
-
-
 def init_app():
     from flask import Flask
     app = Flask(__name__)

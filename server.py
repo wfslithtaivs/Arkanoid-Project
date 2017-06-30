@@ -7,7 +7,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from passlib.hash import pbkdf2_sha256
 import urllib2
 import json
-from datetime import datetime
+
 ## find urlsafe_token method!
 
 # Init Flask application and attach db
@@ -110,6 +110,7 @@ def register_process():
 
     return redirect("/")
 
+
 @app.route("/users/<user_id>")
 def user_profile(user_id):
     """Render current user profile"""
@@ -136,6 +137,40 @@ def users():
 
     return render_template("users.html", users=users)
 
+
+@app.route("/log_game", methods=["POST"])
+def log_game():
+    """Create new game record in DB"""
+
+    data = request.form;
+    current_user = session.get("current_user")
+
+    # if id of game exist (check session["current_game"]) - then update
+    # if game "won" -> remove saving_info and keep only stats - scores, and date finished
+
+    # defensive coding
+    # add check in forms - show save button only of user exists and game paused
+    if current_user:
+        game = Game(user_id=current_user,
+                    last_saving=data)
+
+        db.session.add(game)
+        db.session.commit()
+
+        flash("The game with id = {} is successfully saved".format(game.game_id))
+
+    else:
+        return "No user provided"
+
+
+@app.route("/get_game.json")
+def get_game():
+    """Get json with saved game state by game id"""
+
+    game_id = request.args.get("game_id")
+    game_log = Game.query.get(int(game_id)).last_saving
+
+    return jsonify(game_log)
 
 if __name__ == "__main__":
     # Debug true

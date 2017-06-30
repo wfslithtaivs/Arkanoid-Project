@@ -36,6 +36,8 @@ var leftPressed = false;
 var brickRowCount = 10;
 var brickColumnCount = 5;
 
+var msg;
+
 // canvas size 480x320
 
 var brickWidth = 35;
@@ -51,6 +53,7 @@ var game_in_progress = true;
 var progress = document.getElementById("game_progress");
 var stat = document.getElementById("game_stat");
 var redrawIntervalID;
+var numBricks = brickRowCount * brickColumnCount;
 
 for(c=0; c<brickColumnCount; c++) {
 
@@ -124,21 +127,26 @@ function mouseMoveHandler(e) {
 function collisionDetection() {
     for(c=0; c<brickColumnCount; c++) {
         for(r=0; r<brickRowCount; r++) {
+
             var b = bricks[c][r];
+
             if(b.status > 0) {
                 if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
                     b.status --;
+                    dy = -dy;
+
                     if (b.status === 0) {
                       score++;
                       ball_speed ++;
                       x *= ball_speed;
                       y *= ball_speed;
-                      if(score == brickRowCount*brickColumnCount) {
+                      
+                      if(score == numBricks){
                         progress.innerHTML = "YOU WIN";
-                        stop_game("win");
+                        msg = "won";
+                        stop_game();
                       }
                     }
-                 dy = -dy;
                 }
             }
         }
@@ -204,7 +212,7 @@ function draw() {
     drawPaddle();
     drawScore();
     drawLives();
-    collisionDetection();
+    collisionDetection(); // TODO: how to make sure that collisions detected one at a time?
     if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
         dx = -dx;
     }
@@ -219,7 +227,8 @@ function draw() {
             lives--;
             if(!lives) {
                 progress.innerHTML = "GAME OVER";
-                stop_game("over");
+                msg = "over";
+                stop_game();
             }
             else {
                 x = canvas.width/2;
@@ -238,9 +247,6 @@ function draw() {
     }
     x += dx;
     y += dy;
-
-    // requestAnimationFrame(draw); // infinite recursion kills browsers
-    // way out - setInterval(draw, 25);
   }
   else {
     clearInterval(redrawIntervalID);
@@ -253,27 +259,29 @@ play = document.getElementById("play-game");
 // switch between play/pause/resume while playing  
 play.addEventListener("click", function () {
   if (play.value === "Play"){
-    if (progress.innerHTML == "GAME STOPPED") {
-      init();
-    }
+    init();
     progress.innerHTML = "";
     game_in_progress = true;
     redrawIntervalID = setInterval(draw, 25);
     play.value = 'Pause';
   }
   else if(play.value === 'Pause') {
-    game_in_progress = false;
+    msg = "paused";
+    stop_game();
     progress.innerHTML = "GAME PAUSED";
     play.value = 'Resume';
   }
   else if(play.value === "Resume"){
-    if (progress.innerHTML == "GAME STOPPED") {
-      init();
-    }
-    progress.innerHTML = "";
+    // load current game from corresponding json
+    
+    $.get("/get_game.json", function (results){
+            console.log(results);
+          });
+    
+    init();
     game_in_progress = true;
     redrawIntervalID = setInterval(draw, 25);
-    play.value = 'Pause';
+    play.value = "Pause";
   }
 });
 
@@ -281,18 +289,36 @@ stop = document.getElementById("stop-game");
 stop.addEventListener("click", stop_game);
 
 // save game state into db and back to default play button
-function stop_game(msg){
-
-    console.log("msg is " + msg);
-  
-    stat.innerHTML = "x=" + x + ", y=" + y + ", dx=" + dx + ", dy=" +  dy;
-    game_in_progress = false;
-    var canvas = document.getElementById("myCanvas");
-    var ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    progress.innerHTML = "GAME STOPPED";
-    play.value = "Play";
+function stop_game(){
+  game_in_progress = false;
+  console.log("msg is " + msg);
+  play.value = "Play";
+  var canvas = document.getElementById("myCanvas");
+  var ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
  
+save = document.getElementById("save-game");
+save.addEventListener("click", save_game);
 
+function save_game() {
+  var saved_game_id;
 
+  game_stat = {'x':x,
+              'y': y,
+              'dx':dx,
+              'dy':dy,
+              'bricks': bricks,
+              'score': score,
+              'status': msg
+             };
+
+  console.log(game_stat);
+
+  $.post("/log_game", JSON.stringify(game_stat), function (results){
+      console.log("Log stat received: ", results);
+      saved_game_id = results["game_id"];
+    });
+
+  progress.innerHTML = "GAME SAVED WITH id = " + saved_game_id;
+}
