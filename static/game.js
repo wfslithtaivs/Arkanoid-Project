@@ -1,15 +1,4 @@
 console.log("starting");
-
-  // Get the modal
-var modal = document.getElementById('id01');
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-
 // Canvas setup
 
 var ball_speed = 0;
@@ -22,41 +11,35 @@ var x = canvas.width/2;
 var y = canvas.height-30;
 var dx = 2;
 var dy = -2;
-
 var paddleHeight = 10;
 var paddleWidth = 75;
 var paddleX = (canvas.width-paddleWidth)/2;
-
 var rightPressed = false;
 var leftPressed = false;
-
-// var brickRowCount = 5;
-// var brickColumnCount = 3;
-
-var brickRowCount = 10;
-var brickColumnCount = 5;
-
+var brickRowCount = 5;
+var brickColumnCount = 3;
 var msg;
 
 // canvas size 480x320
 
-var brickWidth = 35;
-var brickHeight = 10;
-var brickPadding = 10;
-var brickOffsetTop = 30;
-var brickOffsetLeft = 20;
+brickWidth = 75;
+brickHeight = 20;
+brickPadding = 10;
+brickOffsetTop = 30;
+brickOffsetLeft = 30;
 
 var score = 0;
 var lives = 3;
 var bricks = [];
 var game_in_progress = true;
+
 var progress = document.getElementById("game_progress");
 var stat = document.getElementById("game_stat");
+
 var redrawIntervalID;
 var numBricks = brickRowCount * brickColumnCount;
 
 for(c=0; c<brickColumnCount; c++) {
-
     bricks[c] = [];
     for(r=0; r<brickRowCount; r++) {
         bricks[c][r] = { x: 0, y: 0, status: 3 };

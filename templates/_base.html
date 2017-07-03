@@ -3,7 +3,6 @@
     <head>
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
         <link href="../static/styles.css" rel="stylesheet">
-        <script src="http://code.jquery.com/jquery.js"></script>
         <title>{% block title %} Arkanoid Project {% endblock %}</title>
     </head>
     <body>
@@ -76,8 +75,15 @@
             {% endwith %}
         </div>
 
+        <script>
+        // When the user clicks anywhere outside of the modal, close it
+          window.onclick = function(event) {
+            if (event.target.className ==  "modal") {
+              $("div#id01.modal").css({display :"none"});
+              $("div#id02.modal").css({display : "none"});
+            }};
+        </script>
         {% block content %} {% endblock %}
       </div>
     </body>
-
 </html>

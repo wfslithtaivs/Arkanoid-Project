@@ -29,11 +29,11 @@ class Game(db.Model):
 
     game_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    game_stats = db.Column(db.String(256), default="in progress")
-    last_saving = db.Column(db.JSON)
+    # stats when finished - scores, level, lives-left  - csv
+    game_stats = db.Column(db.String(256), default="SAVED")
+    last_saving = db.Column(db.JSON, default=None)
     t_stamp = db.Column(db.DateTime, default=datetime.now())
     #  add level information to game
-
 
 class Session(db.Model):
     """Session class to keep track of user interactions with existing games"""
