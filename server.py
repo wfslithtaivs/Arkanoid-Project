@@ -122,7 +122,9 @@ def user_profile(user_id):
         c_user_id = User.query.filter_by(user_id=current_user).first()
         c_user_id = c_user_id.user_id
         if c_user_id == user_id:
-            return render_template("user_profile.html", time=datetime.now())
+            return render_template("user_profile.html", 
+                                    time=datetime.now(),
+                                    games_in_progress=User.query.get(user_id).games)
     else:
         flash("For some reasons, you are not allowed to see this profile")
 
@@ -142,7 +144,8 @@ def users():
 def log_game():
     """Create new game record in DB"""
 
-    data = request.form;
+    data = request.form.keys()
+    data = json.loads(data[0])
     current_user = session.get("current_user")
 
     # if id of game exist (check session["current_game"]) - then update
@@ -150,6 +153,7 @@ def log_game():
 
     # defensive coding
     # add check in forms - show save button only of user exists and game paused
+    
     if current_user:
         game = Game(user_id=current_user,
                     last_saving=data)
@@ -157,8 +161,7 @@ def log_game():
         db.session.add(game)
         db.session.commit()
 
-        flash("The game with id = {} is successfully saved".format(game.game_id))
-
+        return jsonify({"game_id": game.game_id})
     else:
         return "No user provided"
 

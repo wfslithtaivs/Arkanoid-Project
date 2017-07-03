@@ -20,6 +20,34 @@
     </form>
 </div>
 
+<div class="row">
+
+ <div class="table-responsive">          
+  <table class="table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Bricks</th>
+        <th>Score</th>
+        <th>Status</th>
+        <th>Replay</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for game in games_in_progress%}
+      <tr>
+        <td>{{game.game_id}}</td>
+        <td>{{game.last_saving["bricks"]}}</td>
+        <td>{{game.last_saving["score"]}}</td>
+        <td>{{game.last_saving["status"]}}</td>
+        <td>Replay button</td>
+      </tr>
+    {% endfor %}  
+    </tbody>
+  </table>
+  </div>
+</div>
+
 <script src="http://code.jquery.com/jquery.js"></script>
 
 <script>

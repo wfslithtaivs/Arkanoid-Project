@@ -31,7 +31,7 @@ class Game(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     # stats when finished - scores, level, lives-left  - csv
     game_stats = db.Column(db.String(256), default="SAVED")
-    last_saving = db.Column(db.JSON, default=None)
+    last_saving = db.Column(db.JSON, default=None) # or {}
     t_stamp = db.Column(db.DateTime, default=datetime.now())
     #  add level information to game
 

@@ -284,7 +284,9 @@ function stop_game(){
 save = document.getElementById("save-game");
 save.addEventListener("click", save_game);
 
+
 function save_game() {
+
   var saved_game_id;
 
   game_stat = {'x':x,
@@ -296,12 +298,11 @@ function save_game() {
               'status': msg
              };
 
-  console.log(game_stat);
+  console.log(JSON.stringify(game_stat));
 
-  $.post("/log_game", JSON.stringify(game_stat), function (results){
-      console.log("Log stat received: ", results);
-      saved_game_id = results["game_id"];
-    });
-
-  progress.innerHTML = "GAME SAVED WITH id = " + saved_game_id;
+  $.post("/log_game",
+          JSON.stringify(game_stat),
+          function (results){
+            progress.innerHTML = "GAME SAVED with id=" + results.game_id;
+  });
 }
