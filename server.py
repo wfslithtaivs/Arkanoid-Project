@@ -153,7 +153,7 @@ def log_game():
 
     # defensive coding
     # add check in forms - show save button only of user exists and game paused
-    
+
     if current_user:
         game = Game(user_id=current_user,
                     last_saving=data)
@@ -174,6 +174,24 @@ def get_game():
     game_log = Game.query.get(int(game_id)).last_saving
 
     return jsonify(game_log)
+
+
+@app.route("/load_game/<game_id>")
+def load_game(game_id):
+    """Load saved game"""
+
+    current_user = session.get("current_user")
+    game_id = int(game_id)
+
+    if current_user:
+            saved_game = Game.query.get(game_id)
+            return render_template("index.html",
+                                    saved_game=saved_game)
+    else:
+        flash("For some reasons, you are not allowed to see this profile")
+
+    return redirect("/")
+
 
 if __name__ == "__main__":
     # Debug true

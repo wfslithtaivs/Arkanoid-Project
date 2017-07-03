@@ -1,6 +1,7 @@
 console.log("starting");
 // Canvas setup
 
+
 var ball_speed = 0;
 
 var canvas = document.getElementById("myCanvas");
@@ -305,4 +306,8 @@ function save_game() {
           function (results){
             progress.innerHTML = "GAME SAVED with id=" + results.game_id;
   });
+}
+
+function load_game() {
+
 }
