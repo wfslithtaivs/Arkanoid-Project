@@ -12,22 +12,26 @@
   </div>
 
   <div class="row">
-
         <input type="button" class="btn btn-outline-primary" id="play-game" value="Play">
         <input type="button" class="btn btn-outline-primary" id="stop-game" value="Stop">
         <input type="button" class="btn btn-outline-success" id="save-game" value="Save">
-
   </div>
 
   <br >
   <div class="row">
     <canvas id="myCanvas" width="480" height="320" style="border:1px solid #c3c3c3;"></canvas>
   </div>
+
+  <div class="row">
+    {% if session.get("saved_game") %}
+      <div id="saved_game" style="display: none;">{{session["saved_game"]}} </div>
+    {% endif %}
+  </div>
+
   <br >
   <div class="row">
       <p id="game_progress"></p>
       <p id="game_stat"></p>
-
  </div>  
 
   <script src="../static/game.js"></script>

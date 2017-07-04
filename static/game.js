@@ -1,12 +1,8 @@
-console.log("starting");
-// Canvas setup
-
-
-var ball_speed = 0;
+// Canvas setup, size 480x320
 
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
-
+var ball_speed = 0;
 var ballRadius = 10;
 var x = canvas.width/2;
 var y = canvas.height-30;
@@ -19,41 +15,37 @@ var rightPressed = false;
 var leftPressed = false;
 var brickRowCount = 5;
 var brickColumnCount = 3;
-var msg;
-
-// canvas size 480x320
-
-brickWidth = 75;
-brickHeight = 20;
-brickPadding = 10;
-brickOffsetTop = 30;
-brickOffsetLeft = 30;
-
+var brickWidth = 75;
+var brickHeight = 20;
+var brickPadding = 10;
+var brickOffsetTop = 30;
+var brickOffsetLeft = 30;
 var score = 0;
 var lives = 3;
 var bricks = [];
 var game_in_progress = true;
+var numBricks = brickRowCount * brickColumnCount;
+var redrawIntervalID;
+var msg = "";
 
 var progress = document.getElementById("game_progress");
 var stat = document.getElementById("game_stat");
 
-var redrawIntervalID;
-var numBricks = brickRowCount * brickColumnCount;
-
-for(c=0; c<brickColumnCount; c++) {
-    bricks[c] = [];
-    for(r=0; r<brickRowCount; r++) {
-        bricks[c][r] = { x: 0, y: 0, status: 3 };
-    }
-}
-
 // Canvas setup
-function init() {
+function init(params) {
+  //init(params = {"x" : 3, "y" : 5, "dx" : -40, "dy" : 7, "bricks" : [1, 2, 3]});
+
+  x = params["x"] || canvas.width/2;
+  y = params["y"] || canvas.height/2;
+  dx = params["dx"] || 2;
+  dy = params["dy"] || -2;
+  bricks = params["bricks"] || [];
+
+  console.log(x, y, dx, dy, bricks);
+  console.log(params);
+  console.log(params["x"], params["y"], params["dx"], params["dy"], bricks);
+
   ballRadius = 10;
-  x = canvas.width/2;
-  y = canvas.height-30;
-  dx = 2;
-  dy = -2;
   paddleHeight = 10;
   paddleWidth = 75;
   paddleX = (canvas.width-paddleWidth)/2;
@@ -71,14 +63,15 @@ function init() {
   
   score = 0;
   lives = 3;
-  bricks = [];
   game_in_progress = true;
 
-  for(c=0; c<brickColumnCount; c++) {
-      bricks[c] = [];
-      for(r=0; r<brickRowCount; r++) {
-          bricks[c][r] = { x: 0, y: 0, status: 3 };
-      }
+  if (bricks.length === 0) {
+    for(c=0; c<brickColumnCount; c++) {
+        bricks[c] = [];
+        for(r=0; r<brickRowCount; r++) {
+            bricks[c][r] = { x: 0, y: 0, status: 3 };
+        }
+    }
   }
 }
 
@@ -243,7 +236,19 @@ play = document.getElementById("play-game");
 // switch between play/pause/resume while playing  
 play.addEventListener("click", function () {
   if (play.value === "Play"){
-    init();
+    // load parameters to initialize game from sessions
+
+    var data = JSON.parse($("div#saved_game").text());
+  
+    if (data) {
+      console.log("initialized with data");
+      init(params = data);
+    }
+    else {
+      console.log("initialized from scratch");
+      init(params = false);
+    }
+
     progress.innerHTML = "";
     game_in_progress = true;
     redrawIntervalID = setInterval(draw, 25);
@@ -262,7 +267,7 @@ play.addEventListener("click", function () {
             console.log(results);
           });
     
-    init();
+    init(params = false);
     game_in_progress = true;
     redrawIntervalID = setInterval(draw, 25);
     play.value = "Pause";
@@ -285,9 +290,7 @@ function stop_game(){
 save = document.getElementById("save-game");
 save.addEventListener("click", save_game);
 
-
 function save_game() {
-
   var saved_game_id;
 
   game_stat = {'x':x,
@@ -306,8 +309,4 @@ function save_game() {
           function (results){
             progress.innerHTML = "GAME SAVED with id=" + results.game_id;
   });
-}
-
-function load_game() {
-
 }

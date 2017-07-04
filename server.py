@@ -114,7 +114,7 @@ def register_process():
 @app.route("/users/<user_id>")
 def user_profile(user_id):
     """Render current user profile"""
-
+ 
     current_user = session.get("current_user")
     user_id = int(user_id)
 
@@ -185,8 +185,8 @@ def load_game(game_id):
 
     if current_user:
             saved_game = Game.query.get(game_id)
-            return render_template("index.html",
-                                    saved_game=saved_game)
+            session["saved_game"] = json.dumps(saved_game.last_saving)
+            return render_template("index.html")
     else:
         flash("For some reasons, you are not allowed to see this profile")
 
