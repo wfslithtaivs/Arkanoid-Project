@@ -181,7 +181,9 @@ function drawLives() {
     ctx.fillText("Lives: "+lives, canvas.width-65, 20);
 }
 function draw() {
+
   console.log("starting to draw game");
+  
   if(game_in_progress === true) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBricks();
@@ -235,56 +237,50 @@ play = document.getElementById("play-game");
 
 // switch between play/pause/resume while playing  
 play.addEventListener("click", function () {
+
   if (play.value === "Play"){
     // load parameters to initialize game from sessions
+    var data = $("div#saved_game").text();
 
-    var data = JSON.parse($("div#saved_game").text());
-  
-    if (data) {
-      console.log("initialized with data");
-      init(params = data);
-    }
-    else {
-      console.log("initialized from scratch");
-      init(params = false);
-    }
+    data === "None" ? data=false : data = JSON.parse(data);
+
+    data ? (console.log("initialized with data"), init(params = data)) 
+         : (console.log("initialized from scratch"), init(params = false));
 
     progress.innerHTML = "";
     game_in_progress = true;
     redrawIntervalID = setInterval(draw, 25);
-    play.value = 'Pause';
+    play.value = play.innerHTML = 'Pause';
   }
   else if(play.value === 'Pause') {
     msg = "paused";
     stop_game();
     progress.innerHTML = "GAME PAUSED";
-    play.value = 'Resume';
+    play.value = play.innerHTML = 'Resume';
   }
   else if(play.value === "Resume"){
-    // load current game from corresponding json
-    
-    $.get("/get_game.json", function (results){
-            console.log(results);
-          });
-    
-    init(params = false);
     game_in_progress = true;
     redrawIntervalID = setInterval(draw, 25);
-    play.value = "Pause";
+    play.value = play.innerHTML = "Pause";
   }
 });
 
 stop = document.getElementById("stop-game");
-stop.addEventListener("click", stop_game);
+stop.addEventListener("click", function () {msg = "stopped"; stop_game(); });
 
 // save game state into db and back to default play button
 function stop_game(){
+
   game_in_progress = false;
-  console.log("msg is " + msg);
-  play.value = "Play";
-  var canvas = document.getElementById("myCanvas");
-  var ctx = canvas.getContext("2d");
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  console.log("the game is " + msg);
+  play.value = play.innerHTML = "Play";
+
+  if(msg === "stopped") {
+    progress.innerHTML = "GAME STOPPED";
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
 }
  
 save = document.getElementById("save-game");

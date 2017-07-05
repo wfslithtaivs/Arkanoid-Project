@@ -12,9 +12,9 @@
   </div>
 
   <div class="row">
-        <input type="button" class="btn btn-outline-primary" id="play-game" value="Play">
-        <input type="button" class="btn btn-outline-primary" id="stop-game" value="Stop">
-        <input type="button" class="btn btn-outline-success" id="save-game" value="Save">
+        <button style="width:auto;" class="btn btn-outline-primary" id="play-game" value="Play" >Play</button>
+        <button style="width:auto;" class="btn btn-outline-primary" id="stop-game">Stop</button>
+        <button style="width:auto;" class="btn btn-outline-success" id="save-game">Save</button>
   </div>
 
   <br >
@@ -24,7 +24,9 @@
 
   <div class="row">
     {% if session.get("saved_game") %}
-      <div id="saved_game" style="display: none;">{{session["saved_game"]}} </div>
+      <div id="saved_game" style="display: none;">{{session["saved_game"]}}</div>
+    {% else %}
+      <div id="saved_game" style="display: none;">None</div>    
     {% endif %}
   </div>
 
