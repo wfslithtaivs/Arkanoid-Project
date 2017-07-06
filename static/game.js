@@ -6,8 +6,8 @@ var ball_speed = 0;
 var ballRadius = 10;
 var x = canvas.width/2;
 var y = canvas.height-30;
-var dx = 2;
-var dy = -2;
+var dx = 4;
+var dy = -4;
 var paddleHeight = 10;
 var paddleWidth = 75;
 var paddleX = (canvas.width-paddleWidth)/2;
@@ -27,6 +27,9 @@ var game_in_progress = true;
 var numBricks = brickRowCount * brickColumnCount;
 var redrawIntervalID;
 var msg = "";
+
+// readfromfile: 
+  // var {varname} = {value};
 
 var progress = document.getElementById("game_progress");
 var stat = document.getElementById("game_stat");
@@ -115,8 +118,9 @@ function collisionDetection() {
                     if (b.status === 0) {
                       score++;
                       ball_speed ++;
-                      x *= ball_speed;
-                      y *= ball_speed;
+                      dx > 0 ? dx+=0.5 : dx-=0.5;
+                      dy > 0 ? dy+=0.5 : dy-=0.5;
+
                       
                       if(score == numBricks){
                         progress.innerHTML = "YOU WIN";
@@ -234,16 +238,20 @@ function draw() {
 }
 
 play = document.getElementById("play-game");
+stop = document.getElementById("stop-game");
+save = document.getElementById("save-game");
+save.setAttribute("style", "display:none;");
+stop.setAttribute("style", "display:none;");
 
 // switch between play/pause/resume while playing  
 play.addEventListener("click", function () {
 
   if (play.value === "Play"){
     // load parameters to initialize game from sessions
+
     var data = $("div#saved_game").text();
-
     data === "None" ? data=false : data = JSON.parse(data);
-
+    $("div#saved_game").attr("text", "None");
     data ? (console.log("initialized with data"), init(params = data)) 
          : (console.log("initialized from scratch"), init(params = false));
 
@@ -251,21 +259,26 @@ play.addEventListener("click", function () {
     game_in_progress = true;
     redrawIntervalID = setInterval(draw, 25);
     play.value = play.innerHTML = 'Pause';
+    save.setAttribute("style", "display:none;");
+    stop.setAttribute("style", "display:block;");
   }
   else if(play.value === 'Pause') {
     msg = "paused";
     stop_game();
     progress.innerHTML = "GAME PAUSED";
     play.value = play.innerHTML = 'Resume';
+    save.setAttribute("style", "display:block;");
+    stop.setAttribute("style", "display:block;");
   }
   else if(play.value === "Resume"){
     game_in_progress = true;
     redrawIntervalID = setInterval(draw, 25);
     play.value = play.innerHTML = "Pause";
+    save.setAttribute("style", "display:none;");
+    stop.setAttribute("style", "display:block;");
   }
 });
 
-stop = document.getElementById("stop-game");
 stop.addEventListener("click", function () {msg = "stopped"; stop_game(); });
 
 // save game state into db and back to default play button
@@ -280,10 +293,11 @@ function stop_game(){
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    save.setAttribute("style", "display:none;");
+    stop.setAttribute("style", "display:none;");
   }
 }
  
-save = document.getElementById("save-game");
 save.addEventListener("click", save_game);
 
 function save_game() {

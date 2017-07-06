@@ -2,12 +2,12 @@
 
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from passlib.hash import pbkdf2_sha256
 
 # create ORM object to interact with db
 db = SQLAlchemy()
 
-############## Object Model #############################
-
+############################# Data Model #############################
 
 class User(db.Model):
     """User class"""
@@ -15,12 +15,71 @@ class User(db.Model):
     __tablename__ = "users"
 
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    username = db.Column(db.String(50))
+    username = db.Column(db.String(50), unique=True)
     password_token = db.Column(db.String(256))
     avatar = db.Column(db.String(256), default="../static/img/bowie_ipsum.jpg") # store relative path to user-avatar
 
     ## add relation Games
     games = db.relationship('Game')
+
+    @staticmethod
+    def get_user_by_id(user_id):
+        """Get user by id"""
+
+        return User.query.get(user_id)
+
+    @staticmethod
+    def get_guest_user():
+        """Get or create guest user"""
+
+        guest = User.query.filter_by(username="guest").first()
+
+        if guest == None:
+            guest = User(username="guest",
+                        password_token=pbkdf2_sha256.hash("password"))
+            db.session.add(guest)
+            db.session.commit()
+
+        return guest
+
+    @staticmethod
+    def create_user(username, password, avatar):
+        """Create new user"""
+
+     # check if user already in DB, if not - add him
+
+        user = User.query.filter_by(username=username).first()
+
+        if user:
+            return "Already in DB"
+        else:
+            # encrypt password with salty hash
+            password_token = pbkdf2_sha256.hash(password)
+
+            if avatar:
+                user = User(username=username,
+                            password_token=password_token,
+                            avatar=avatar)
+            else:
+                user = User(username=username,
+                            password_token=password_token)
+
+            db.session.add(user)
+            db.session.commit()
+
+        return "New user - {} - succesfully created".format(user.username)
+
+
+    @staticmethod
+    def get_user_by_credentials(username, password):
+        """Get user by credentials"""
+
+        user = User.query.filter_by(username=username).first()
+
+        if (user != None) & pbkdf2_sha256.verify(password, user.password_token):
+            return user
+
+        return None
 
 class Game(db.Model):
     """Game class"""
@@ -45,14 +104,12 @@ class Session(db.Model):
     t_stamp = db.Column(db.DateTime)
 
 
-##########################################################
-# Helper functions
+############################# Helper Functions #############################
+
 def init_app():
     from flask import Flask
     app = Flask(__name__)
-
     connect_to_db(app)
-
     print "Connected to DB."
 
 
