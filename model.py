@@ -42,6 +42,7 @@ class User(db.Model):
 
         return guest
 
+
     @staticmethod
     def create_user(username, password, avatar):
         """Create new user"""
@@ -50,24 +51,19 @@ class User(db.Model):
 
         user = User.query.filter_by(username=username).first()
 
-        if user:
-            return "Already in DB"
-        else:
-            # encrypt password with salty hash
+        if not user:
+            # encrypt password with salted hash
             password_token = pbkdf2_sha256.hash(password)
 
-            if avatar:
-                user = User(username=username,
-                            password_token=password_token,
-                            avatar=avatar)
-            else:
-                user = User(username=username,
-                            password_token=password_token)
+            user = User(username=username,
+                        password_token=password_token,
+                        avatar=avatar)
+
 
             db.session.add(user)
             db.session.commit()
 
-        return "New user - {} - succesfully created".format(user.username)
+            return user
 
 
     @staticmethod
@@ -76,10 +72,9 @@ class User(db.Model):
 
         user = User.query.filter_by(username=username).first()
 
-        if (user != None) & pbkdf2_sha256.verify(password, user.password_token):
+        if (user != None) and pbkdf2_sha256.verify(password, user.password_token):
             return user
-
-        return None
+             # function returns None by default
 
 class Game(db.Model):
     """Game class"""
@@ -93,6 +88,26 @@ class Game(db.Model):
     last_saving = db.Column(db.JSON, default=None) # or {}
     t_stamp = db.Column(db.DateTime, default=datetime.now())
     #  add level information to game
+
+    # Add create game and return saved game from Game
+
+    @staticmethod
+    def create_game(current_user, data):
+        """Creates and returns new game object """
+
+        game = Game(user_id=current_user,
+                    last_saving=data)
+        db.session.add(game)
+        db.session.commit()
+
+        return game
+
+    @staticmethod
+    def get_game_by_id(game_id):
+        """Returns game by game_id """
+
+        return Game.query.get(game_id)
+
 
 class Session(db.Model):
     """Session class to keep track of user interactions with existing games"""

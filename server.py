@@ -16,30 +16,45 @@ app.secret_key = "sldjflksf"
 ##TODO: REMOVE FROM PRODUCTION
 app.jinja_env.undefined = StrictUndefined
 
+############################# Messages #############################
+MESSAGES = {'logout': 'You were logged out. See you later!',
+            'register_failed': 'User already in out base, please, login',
+            'wrong_credentials': 'Wrong credentials',
+            'access_denied': "Sorry, you are not allowed to see this page",
+            'no_user_provided': 'No user provided'}
+
+
+############################# Test area #############################
+@app.route('/start')
+def start():
+    """Renders index page of Arkanoid Project"""
+
+    return render_template("start.html")
+
 
 ############################# User routes #############################
 @app.route('/')
 def index():
-    """Arkanoid Project"""
+    """Renders index page of Arkanoid Project"""
 
     return render_template("index.html")
 
 
 @app.route('/login_guest', methods=['GET'])
 def login_guest():
-    """ Login guset with default credentials"""
+    """Logs guest with default credentials.
+       Add guest ID to the (flask) session object
+    """
 
     add_user_to_session(User.get_guest_user())
+
     return redirect('/')
 
 
 @app.route('/login_user', methods=['POST'])
 def login_user():
-    """ Logs user in and add his ID in the (flask) session object if it:
-        - exists in database
-        - and password provided matches password in the database
-        Otherwise:
-        - catches errors, flash messages and redirect to register form
+    """ Logs user in and add his ID in the (flask) session object if it.
+        If user doesn't exist: flashes message and redirect to default route
     """
 
     user = User.get_user_by_credentials(request.form.get("username"),
@@ -47,29 +62,39 @@ def login_user():
 
     if user:
         add_user_to_session(user)
-        return redirect('/users/{}'.format(user_id))
-    else:
-        flash('Wrong credentials')
-        return redirect('/')
+        return redirect('/users/{}'.format(user.user_id))
+
+    flash(MESSAGES['wrong_credentials'])
+    return redirect('/')
 
 
 @app.route('/logout')
 def logout():
-    """Logout user and redirect to homepage"""
+    """Logout user by deleting current_user from session object,
+       flashes sorry message on success and redirects to default route
+    """
 
     del session["current_user"]
-    flash('You were logged out. See you later!')
+    flash(MESSAGES['logout'])
     return redirect('/')
 
 
 @app.route("/register", methods=["POST"])
 def register_process():
-    """Display registration form and register user in DB"""
+    """Register user in DB and redirects to user profile.
+       If user already in DB or some other transactional troubles -
+       redirects to default route
+    """
 
     rqf = request.form
     avatar = get_avatar() if (rqf.get('want_avatar') == "true") else None
-    flash(User.create_user(rqf.get('username'), rqf.get('password'), avatar))
+    user = User.create_user(rqf.get('username'), rqf.get('password'), avatar)
 
+    if user:
+        add_user_to_session(user)
+        return redirect('/users/{}'.format(user.user_id))
+
+    flash(MESSAGES['register_failed'])
     return redirect("/")
 
 
@@ -87,7 +112,7 @@ def user_profile(user_id):
                                     time=datetime.now(),
                                     games_in_progress=page_user.games)
     else:
-        flash("For some reasons, you are not allowed to see this profile")
+        flash(MESSAGES['access_denied'])
 
     return redirect("/")
 
@@ -113,44 +138,42 @@ def log_game():
     # if game "won" -> remove saving_info and keep only stats - scores, and date finished
 
     if current_user:
-        game = Game(user_id=current_user,
-                    last_saving=data)
-        db.session.add(game)
-        db.session.commit()
-
+        game = Game.create_game(current_user, data)
         return jsonify({"game_id": game.game_id})
     else:
-        return "No user provided"
+        return MESSAGES['no_user_provided']
 
 
-@app.route("/get_game.json")
-def get_game():
-    """Get json with saved game state by game id"""
+# From previous version
+# @app.route("/get_game.json")
+# def get_game():
+#     """Get json with saved game state by game id"""
 
-    game_id = request.args.get("game_id")
-    game_log = Game.query.get(int(game_id)).last_saving
+#     game_id = request.args.get("game_id")
 
-    return jsonify(game_log)
+#     game_log = Game.get_game_by_id(int(game_id))
+
+#     if game_log:
+#         return jsonify(game_log.last_saving)
 
 
 @app.route("/load_game/<game_id>")
 def load_game(game_id):
-    """Load saved game"""
+    """Load saved game for current user"""
 
     current_user = session.get("current_user")
     game_id = int(game_id)
 
     if current_user:
-            saved_game = Game.query.get(game_id)
-            session["saved_game"] = json.dumps(saved_game.last_saving)
+        saved_game = Game.get_game_by_id(game_id)
+        session["saved_game"] = json.dumps(saved_game.last_saving)
     else:
-        flash("For some reasons, you are not allowed to see this profile")
+        flash(MESSAGES['access_denied'])
 
     return redirect("/")
 
 
 ############################# Helper Functions #############################
-
 def add_user_to_session(user):
     """Add user data to session """
 
