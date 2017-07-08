@@ -25,19 +25,18 @@ MESSAGES = {'logout': 'You were logged out. See you later!',
 
 
 ############################# Test area #############################
-@app.route('/start')
-def start():
-    """Renders index page of Arkanoid Project"""
-
-    return render_template("start.html")
-
 
 ############################# User routes #############################
 @app.route('/')
 def index():
     """Renders index page of Arkanoid Project"""
 
-    return render_template("index.html")
+    user = session.get("current_user")
+
+    if user: 
+        return render_template("index.html")
+    else:
+        return render_template("start.html")
 
 
 @app.route('/login_guest', methods=['GET'])
