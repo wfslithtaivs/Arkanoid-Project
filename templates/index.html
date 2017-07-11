@@ -1,6 +1,6 @@
 
 {% extends "_base.html" %}
-{% block title%} Arkanoid Project {% endblock %}
+{% block title %} Arkanoid Project {% endblock %}
 {% block content %}
  
   <div class="row">
@@ -12,15 +12,23 @@
   </div>
 
   <div class="row">
-        <button style="width:auto;" class="btn btn-outline-primary" id="play-game" value="Play" >Play</button>
-        <button style="width:auto;" class="btn btn-outline-primary" id="stop-game" style="display:none;">Stop</button>
-        <button style="width:auto;" class="btn btn-outline-success" id="save-game" style="display:none;">Save</button>
+        <button style="width:auto;" class="btn btn-outline-primary" id="play-game" value="Play">Play</button> 
   </div>
 
   <br >
   <div class="row">
-    <canvas id="myCanvas" width="480" height="320" style="border:1px solid #c3c3c3;"></canvas>
+    <canvas id="myCanvas" height="320" width="480" style="border:1px solid #d3d3d3;"> </canvas>
   </div>
+
+  <div class="row">
+    <p><text id="msg"></text></p>
+  
+        <p><button style="width:auto; display:none;" class="btn btn-outline-success" id="save-game">Save</button></p>
+
+    <div class="progress">
+      <div id="myProgress" class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%"> 
+      </div>
+  </div>  
 
   <div class="row">
     {% if session.get("saved_game") %}
