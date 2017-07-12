@@ -129,8 +129,9 @@ def users():
 def log_game():
     """Create new game record in DB"""
 
-    data = request.form.keys()
-    data = json.loads(data[0])
+    # import pdb; pdb.set_trace()
+
+    data = request.get_json()
     current_user = session.get("current_user")
 
     # if id of game exist (check session["current_game"]) - then update

@@ -11,6 +11,13 @@ body {
   opacity: 50%;
 }
 
+.fancy_butns { 
+    margin: 25px;
+    font-family:'Luckiest Guy', cursive;
+    font-size: 20px;
+    color: #0095DD;
+    text-shadow: 4px 4px 4px #f0ad4e;
+}
 
 #rounded-image {
   border-radius: 150px;
@@ -36,8 +43,4 @@ article {
 p {
 
   font-size: 22px;
-}
-
-#btn { 
-    margin: 30px;
 }

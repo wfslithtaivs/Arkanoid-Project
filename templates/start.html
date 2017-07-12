@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link href="https://fonts.googleapis.com/css?family=Luckiest+Guy" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
      <link href="static/start_style.css" rel="stylesheet">
+      <style>
+      h1 {
+        font-family: 'Luckiest Guy', cursive;
+        font-size: 48px;
+        color: #0095DD;
+        text-shadow: 4px 4px 4px #f0ad4e;
+      }
+    </style>
 </head>
 <body>
     <container>
         <div class="row">
          <img id= "rounded-image" src="static/img/img_avatar.png">
-         <h1> Welcome to Arcanoid %username%! </h1>
+         <h1> Welcome to Arcanoid</h1>
         </div> 
 
         <div class="row">
@@ -37,7 +46,7 @@
                              Password <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" required>
                             </div>
                             <div class="checkbox">
-                              <label><input type="checkbox" id="want_avatar" name="want_avatar"> Want custom avatar?</label>
+                              <label><input type="checkbox" id="want_avatar" name="want_avatar" value="true"> Want custom avatar?</label>
                             </div>
                             <button type="submit" class="btn btn-default" style="margin: 30px;">Count me in!</button>
                           </form> 
@@ -58,6 +67,7 @@
     register_button = document.getElementById("register");
     login_form = document.getElementById("login_form"); 
     register_form = document.getElementById("register_form");
+    guest_button = document.getElementById("guest");
 
     login_button.addEventListener("click", function (){
         register_form.setAttribute("style", "display:none;");
@@ -68,6 +78,13 @@
         register_form.setAttribute("style", "display:block;");
         login_form.setAttribute("style", "display:none;");
     });
+
+    var text_style = "margin: 30px; font-family:'Luckiest Guy', cursive; font-size: 20px; color: #009900; text-shadow: 2px 2px 2px #000099;";
+
+    login_button.setAttribute("style", text_style);
+    register_button.setAttribute("style", text_style);
+    guest_button.setAttribute("style", text_style);
+
 
 </script>
 </body>
