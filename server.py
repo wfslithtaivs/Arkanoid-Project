@@ -106,14 +106,17 @@ def user_profile(user_id):
 
     if session_user_id:
         page_user = User.get_user_by_id(user_id)
+        games_in_progress = page_user.games
         if session_user_id == page_user.user_id:
-            return render_template("user_profile.html",
-                                    time=datetime.now(),
-                                    games_in_progress=page_user.games)
-    else:
-        flash(MESSAGES['access_denied'])
-
-    return redirect("/")
+            return render_template(
+                "user_profile.html",
+                time=datetime.now(),
+                games_in_progress=games_in_progress,
+                total_games=len(games_in_progress),
+                games_saved = len([game for game in games_in_progress if game.last_saving["status"] == "saved"]), 
+                games_finished = len([game for game in games_in_progress if game.last_saving["status"] == "won"]),
+                games_failed = len([game for game in games_in_progress if game.last_saving["status"] == "loose"])
+                )
 
 
 @app.route("/users")
@@ -142,6 +145,19 @@ def log_game():
         return jsonify({"game_id": game.game_id})
     else:
         return MESSAGES['no_user_provided']
+
+
+# From previous version
+# @app.route("/get_game.json")
+# def get_game():
+#     """Get json with saved game state by game id"""
+
+#     game_id = request.args.get("game_id")
+
+#     game_log = Game.get_game_by_id(int(game_id))
+
+#     if game_log:
+#         return jsonify(game_log.last_saving)
 
 
 @app.route("/load_game/<game_id>")

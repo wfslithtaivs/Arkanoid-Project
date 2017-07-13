@@ -2,50 +2,90 @@
 {% extends "_base.html" %}
 {% block title%} Arkanoid Project Profile for {{session.get('name')}}{% endblock %}
 {% block content %}
+<div class = "well" style="background-color: #c2d6c2; color: black; padding : 20px;" class="row">
+  <div >
+      <h3> Progress information</h3>
+  </div>
 
-<div class="row" >
+  <div >
+  {% if total_games > 0 %}
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr class="table-success">
+          <td><span class="badge">{{total_games}}</span></td>
+          <th>Success type</th>
+          <th>% of total</th>
+        </tr>
+      </thead>
+       <tbody>
+            <tr >
+              <td ><span class="badge">{{ games_saved }}</span></td>
+              <td >Saved</td>
+              <td >{{(games_saved/total_games) * 100}} %</td>
+            </tr>
 
-    <p> Statistic is comming </p>
-    <p> Hope you are doing good so far. Current time is {{time}} and it is a perfect moment to have some tea, isn't it?</p>
+            <tr class="table-warning">
+              <td ><span class="badge">{{ games_failed }}</span></td>
+              <td>Failed</td>
+              <td>{{(games_failed/total_games) * 100}} %</td>
+            </tr>
 
-    <button id="show">Click me</button>
+             <tr class="table-success">
+              <td ><span class="badge">{{ games_finished }}</span></td>
+              <td>Won</td>
+              <td>{{(games_finished/total_games) * 100}} %</td>
+            </tr>
+          </tbody>
+        </table>
+  {% endif %}
+  </div>
 
-    <img style="display:none;" id="surprise" src="../static/img/dav_hooray.gif" width="480" height="192" frameBorder="0" class="giphy-embed" allowFullScreen></img>
 
-</div>
-<br>
-<div class="row">
-    <form action="/">
-        <input type="submit" value="Game page" class="btn btn-outline-primary" >
-    </form>
-</div>
+  <div >
+      <form action="/">
+          <button type="submit" class="btn btn-primary btn-lg btn-block">Play a new game</button>
+      </form>
+  </div>
 
-<div class="row">
+  <br>
 
- <div class="table-responsive">          
-  <table class="table">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Bricks</th>
-        <th>Score</th>
-        <th>Status</th>
-        <th>Replay</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for game in games_in_progress%}
-      <tr>
-        <td>{{game.game_id}}</td>
-        <td><img id = "game_screenshot" src="{{game.last_saving["screenshot"]}}" height="320" width="480"></img></td>
-        <td>{{game.last_saving["score"]}}</td>
-        <td>{{game.game_stats}}</td>
-        <td> <a href="/load_game/{{game.game_id}}">Load saved game</a>
-        </td>
-      </tr>
-    {% endfor %}  
-    </tbody>
-  </table>
+  <div>
+
+   <div class="table-responsive">          
+    <table class="table table-hover table-sm">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Bricks</th>
+          <th>Current score</th>
+          <th>Current time</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for game in games_in_progress%}
+           {% if game.last_saving["status"] == "saved"%}
+        <tr>
+          <td>{{game.game_id}}</td>
+          <td><img id = "game_screenshot" src="{{game.last_saving["screenshot"]}}" height="160" width="240"></img></td>
+          <td>{{game.last_saving["score"]}}</td>
+          <td>{{game.last_saving.get("timing", 0)}}</td>
+          <td> <a href="/load_game/{{game.game_id}}">Load saved game</a>
+          </td>
+        </tr>
+          {% endif %}
+      {% endfor %}  
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div>
+
+      <button id="show">Click me</button>
+
+      <img style="display:none;" id="surprise" src="../static/img/dav_hooray.gif" width="480" height="192" frameBorder="0" class="giphy-embed" allowFullScreen></img>
+
   </div>
 </div>
 

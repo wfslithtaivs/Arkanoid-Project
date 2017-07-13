@@ -146,16 +146,7 @@ init_bricks = function(loaded_bricks) {
     return bricks;
 }
 
-Game.prototype.init = function() {
-
-    var saved_game = document.getElementById("saved_game");
-    var saved_game_data = saved_game.innerText;
-    // how to delete saved_game from session object?
-    saved_game.innerText = null;
-
-    saved_game_data === "" ? 
-                saved_game_data = false : 
-                saved_game_data = JSON.parse(saved_game_data); 
+Game.prototype.init = function(saved_game_data) {
 
     // restore default params
     if (saved_game_data) {     
@@ -226,7 +217,7 @@ Game.prototype.stop_game = function() {
     clearInterval(redrawIntervalID);
     redrawIntervalID = undefined;
     play_button.innerHTML = 'Play';
-    save_button.setAttribute("style", "display:none;");
+    save_button.setAttribute("style", "width:auto; display:none;");
     msg_field.innerHTML = greet_user(Math.floor(progress));
     this.init();
 }
@@ -310,8 +301,23 @@ function drawLives(lives) {
 }
 // ------- Instances and callbacks
 
-var game = new Game();
-game.init();
+var game;
+
+(function () {
+    game = new Game();
+
+    var saved_game = document.getElementById("saved_game");
+    var saved_game_data = saved_game.innerText;
+    // how to delete saved_game from session object? 
+    saved_game.innerText = null;
+
+    saved_game_data === "" ? 
+                saved_game_data = false : 
+                saved_game_data = JSON.parse(saved_game_data); 
+
+    game.init(saved_game_data);
+
+})();
 
 play_button.addEventListener("click", function (){
    if(play_button.innerHTML === "Play") {
@@ -324,7 +330,7 @@ play_button.addEventListener("click", function (){
         clearInterval(redrawIntervalID);
         redrawIntervalID = undefined;
         play_button.innerHTML = 'Play';
-        save_button.setAttribute("style", "width:auto; display:block;");
+        save_button.setAttribute("style", "width:auto;");
    }
 });
 
@@ -345,8 +351,11 @@ function save_game(game, msg) {
              'lives': game.gameParams.lives,
              'bricks_collected' : game.gameParams.bricks_collected,
              'status': msg,
-             'screenshot' : pngUrl
+             'screenshot' : pngUrl,
+             'timing': "None"
          };
+
+    console.log(game_stat);
 
     $.ajax({
         url: "/log_game",

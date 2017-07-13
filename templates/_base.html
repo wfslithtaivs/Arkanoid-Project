@@ -5,14 +5,14 @@
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
         <link href="../static/styles.css" rel="stylesheet">
         <title>{% block title %} Arkanoid Project {% endblock %}</title>
-        <style>{% block style %}Optional Style {% endblock %}</style>
+        <style>{% block style %} Optional Style {% endblock %}</style>
     </head>
     <body>
         <div class="container">
          <div class="row">
             <div class="col-xs-6">
                     <a href="/users/{{session.get('current_user')}}">
-                        <img src="{{session.get('avatar')}}" class="img-thumbnail" width="100" height="100">
+                        <img  style="background-color: #c2d6c2;" src="{{session.get('avatar')}}" class="img-thumbnail" width="100" height="100">
                     </a>
                     <p> Nice to see you, {{session.get("name")}}!</p>
             </div>
