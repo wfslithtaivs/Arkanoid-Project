@@ -75,7 +75,7 @@ var ball = new Ball();
 function Brick(x, y, weight) {    
     this.x = x || 0;
     this.y = y || 0;
-    this.bWeight = weight || 3;
+    this.bWeight = weight;
 }   
 
 Brick.bWidth = 75;
@@ -115,46 +115,71 @@ Game.brickRowCount = 5;
 Game.brickColumnCount = 3;
 Game.numBricks = 15;
 
-init_bricks = function() {
-    var bricks = [];
-    for(var r = 0; r < Game.brickRowCount; r++) {
-        bricks[r] = [];
-        for(var c = 0; c < Game.brickColumnCount; c++){            
-            var bx = (r*(Brick.bWidth+Brick.bPadding))+Brick.bOffsetLeft;
-            var by = (c*(Brick.bHeight+Brick.bPadding))+Brick.bOffsetTop;
-            var bweight = Math.floor(Math.random() * 3)+ 1;
-            bricks[r][c] = new Brick(bx, by, bweight);
+init_bricks = function(loaded_bricks) {
+
+   var bricks = [];
+
+    if(loaded_bricks) {
+        console.log("We have a bricks");
+        for(var r = 0; r < Game.brickRowCount; r++) {
+            bricks[r] = [];
+            for(var c = 0; c < Game.brickColumnCount; c++){  
+                var bx = (r*(Brick.bWidth+Brick.bPadding))+Brick.bOffsetLeft;
+                var by = (c*(Brick.bHeight+Brick.bPadding))+Brick.bOffsetTop;
+                var bWeight = loaded_bricks[r][c].bWeight;
+                bricks[r][c] = new Brick(bx, by, bWeight);
+            }
+        }
+
+    }
+    else {
+        for(var r = 0; r < Game.brickRowCount; r++) {
+            bricks[r] = [];
+            for(var c = 0; c < Game.brickColumnCount; c++){            
+                var bx = (r*(Brick.bWidth+Brick.bPadding))+Brick.bOffsetLeft;
+                var by = (c*(Brick.bHeight+Brick.bPadding))+Brick.bOffsetTop;
+                var bweight = Math.floor(Math.random() * 3)+ 1;
+                bricks[r][c] = new Brick(bx, by, bweight);
+            }
         }
     }
     return bricks;
 }
 
-Game.prototype.init = function(params = false) {
+Game.prototype.init = function() {
 
-    // var data = $("div#saved_game").text();
-    // data === "None" ? data=false : data = JSON.parse(data);
-    // $("div#saved_game").attr("text", "None");
-    // data ? (console.log("initialized with data"), init(params = data)) 
-    //      : (console.log("initialized from scratch"), init(params = false));
+    var saved_game = document.getElementById("saved_game");
+    var saved_game_data = saved_game.innerText;
+    // how to delete saved_game from session object?
+    saved_game.innerText = null;
 
-    this.gameParams = {score : 0, 
-                lives: 3,
-                game_in_progress: true,
-                bricks_collected: 0};
+    saved_game_data === "" ? 
+                saved_game_data = false : 
+                saved_game_data = JSON.parse(saved_game_data); 
 
-    if (params) {        
-        x = params["x"];
-        y = params["y"];
-        dx = params["dx"];
-        dy = params["dy"];
-        this.bricks = params["bricks"];
+    // restore default params
+    if (saved_game_data) {     
+        x = saved_game_data["x"];
+        y = saved_game_data["y"];
+        dx = saved_game_data["dx"];
+        dy = saved_game_data["dy"];
+        this.bricks = init_bricks(saved_game_data["bricks"]);
+        this.gameParams = {score : saved_game_data["score"],
+                            lives : saved_game_data["lives"], 
+                            game_in_progress : true, 
+                            bricks_collected : saved_game_data["bricks_collected"]}
+        console.log(game);
     } else {
         x = canvas.width/2;
         y =  canvas.height/2;
         dx = 2;
         dy = -2;
-        this.bricks = init_bricks();  
-    }
+        this.bricks = init_bricks(); 
+        this.gameParams = {score : 0, 
+                            lives: 3,
+                            game_in_progress: true,
+                            bricks_collected: 0};
+        }
 }
 
 Game.prototype.collision_detection = function() {
@@ -311,7 +336,7 @@ function save_game(game, msg) {
     var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     var pngUrl = canvas.toDataURL();
 
-    window.game_stat = {'x':x,
+    var game_stat = {'x':x,
              'y': y,
              'dx':dx,
              'dy':dy,

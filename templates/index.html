@@ -30,11 +30,13 @@
       </div>
   </div>  
 
+  <p> {{session.get("saved_game")}} </p>
+
   <div class="row">
     {% if session.get("saved_game") %}
       <div id="saved_game" style="display: none;">{{session["saved_game"]}}</div>
     {% else %}
-      <div id="saved_game" style="display: none;">None</div>    
+      <div id="saved_game" style="display: none;"></div>    
     {% endif %}
   </div>
 
@@ -43,6 +45,6 @@
       <p id="game_progress"></p>
       <p id="game_stat"></p> 
  </div>  
+   <script src="http://code.jquery.com/jquery.js"></script>
   <script src="../static/game.js"></script>
-  <script src="http://code.jquery.com/jquery.js"></script>
  {% endblock %}

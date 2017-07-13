@@ -144,19 +144,6 @@ def log_game():
         return MESSAGES['no_user_provided']
 
 
-# From previous version
-# @app.route("/get_game.json")
-# def get_game():
-#     """Get json with saved game state by game id"""
-
-#     game_id = request.args.get("game_id")
-
-#     game_log = Game.get_game_by_id(int(game_id))
-
-#     if game_log:
-#         return jsonify(game_log.last_saving)
-
-
 @app.route("/load_game/<game_id>")
 def load_game(game_id):
     """Load saved game for current user"""
@@ -166,12 +153,13 @@ def load_game(game_id):
 
     if current_user:
         saved_game = Game.get_game_by_id(game_id)
-        session["saved_game"] = json.dumps(saved_game.last_saving)
+        del saved_game.last_saving["screenshot"]
+        game_data = json.dumps(saved_game.last_saving)        
+        session["saved_game"] = game_data
     else:
         flash(MESSAGES['access_denied'])
 
     return redirect("/")
-
 
 ############################# Helper Functions #############################
 def add_user_to_session(user):
