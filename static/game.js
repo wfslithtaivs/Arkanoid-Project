@@ -11,6 +11,16 @@ var y = this.canvas.height - 30;
 var dx = 4;
 var dy = -4;
 var redrawIntervalID;
+var timer_event;
+
+//------- Timer thing
+
+var show_time = function(time){
+    var minutes = Math.floor(time / 60);
+    var seconds = time - minutes;
+    
+    return minutes + ":" + seconds; 
+}
 
 //------- Keyboard and Mouse Handlers 
 document.addEventListener("keydown", keyDownHandler, false);
@@ -107,7 +117,8 @@ function Game() {
     this.gameParams = {score : 0,
                         lives: 3,
                         game_in_progress: true,
-                        bricks_collected: 0};
+                        bricks_collected: 0,
+                        timing: 0};
     this.bricks = [];
 }
 
@@ -158,7 +169,8 @@ Game.prototype.init = function(saved_game_data) {
         this.gameParams = {score : saved_game_data["score"],
                             lives : saved_game_data["lives"], 
                             game_in_progress : true, 
-                            bricks_collected : saved_game_data["bricks_collected"]}
+                            bricks_collected : saved_game_data["bricks_collected"],
+                            timing : saved_game_data["timing"]};
         console.log(game);
     } else {
         x = canvas.width/2;
@@ -169,7 +181,9 @@ Game.prototype.init = function(saved_game_data) {
         this.gameParams = {score : 0, 
                             lives: 3,
                             game_in_progress: true,
-                            bricks_collected: 0};
+                            bricks_collected: 0,
+                            timing: 0};
+        console.log(game);
         }
 }
 
@@ -222,8 +236,43 @@ Game.prototype.stop_game = function() {
     this.init();
 }
 
-play = function(game, paddle, ball){
+Game.prototype.boundriesCheck = function() {
+    
+    if(rightPressed && paddle.x < canvas.width - paddle.pWidth) {
+                paddle.x += 7;
+            }
+            else if(leftPressed && paddle.x > 0) {
+                paddle.x -= 7;
+            }
+                            
+    if(x + dx > canvas.width - Ball.radius || x + dx < Ball.radius) { dx = -dx; }
+            
+    if(y + dy < Ball.radius) { dy = -dy;}
+    
+    if(y + dy > canvas.height-Ball.radius) {
+        if(x > paddle.x && x < paddle.x + paddle.pWidth) { dy = -dy; }        
+        else {
+            this.gameParams.lives--;
+            if(!this.gameParams.lives) {
+                save_game(this, 'loose');
+                this.stop_game();
+            }
+            else {
+                x = canvas.width/2;
+                y = canvas.height-30;
+                dx = 3;
+                dy = -3;
+                paddle.x = (canvas.width-paddle.pWidth)/2;
+            }
+        }
+    }
 
+    x += dx,
+    y += dy;
+}
+
+
+play = function(game, paddle, ball){
     if (game.gameParams.game_in_progress){
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.beginPath();
@@ -240,52 +289,14 @@ play = function(game, paddle, ball){
             
             drawScore(game.gameParams.score);
             drawLives(game.gameParams.lives);
+            drawTime(show_time(game.gameParams.timing));
             game.collision_detection();
-
-            if(rightPressed && paddle.x < canvas.width - paddle.pWidth) {
-                paddle.x += 7;
-            }
-            else if(leftPressed && paddle.x > 0) {
-                paddle.x -= 7;
-            }
-                            
-            if(x + dx > canvas.width - Ball.radius || x + dx < Ball.radius) {
-                dx = -dx;
-            }
-            
-            if(y + dy < Ball.radius) {
-                dy = -dy;
-            }
-            
-            if(y + dy > canvas.height-Ball.radius) {
-            
-                if(x > paddle.x && x < paddle.x + paddle.pWidth) {
-                    dy = -dy;
-                }
-                
-                else {
-                    game.gameParams.lives--;
-                    if(!game.gameParams.lives) {
-                        save_game(game, 'loose');
-                        game.stop_game();
-                    }
-                    else {
-                        x = canvas.width/2;
-                        y = canvas.height-30;
-                        dx = 3;
-                        dy = -3;
-                        paddle.x = (canvas.width-paddle.pWidth)/2;
-                    }
-                }
-            }
-            x += dx,
-            y += dy;
-                
-        }
-        else {
-            game.stop_game();
-        }
+            game.boundriesCheck();
     }
+    else {
+        game.stop_game();
+    }
+}
 
 // ---- Game state display    
 function drawScore(score) {
@@ -299,6 +310,14 @@ function drawLives(lives) {
     ctx.fillStyle = "#0095DD";
     ctx.fillText("Lives: "+lives, canvas.width-65, 20);
 }
+
+
+function drawTime(time) {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Time: "+time, canvas.width/2, 20);
+}
+
 // ------- Instances and callbacks
 
 var game;
@@ -319,14 +338,20 @@ var game;
 
 })();
 
+//-------- Button events
+
 play_button.addEventListener("click", function (){
    if(play_button.innerHTML === "Play") {
+        timer_event = setInterval(function() {
+            game.gameParams.timing ++;
+        }, 1000);
         msg_field.innerHTML = "";
         redrawIntervalID = setInterval(function () { play(game, paddle, ball); }, 15);
         play_button.innerHTML = 'Pause';
         save_button.setAttribute("style", "width:auto; display:none;");
    } 
    else if(play_button.innerHTML === "Pause") {
+        clearInterval(timer_event);
         clearInterval(redrawIntervalID);
         redrawIntervalID = undefined;
         play_button.innerHTML = 'Play';
@@ -352,7 +377,7 @@ function save_game(game, msg) {
              'bricks_collected' : game.gameParams.bricks_collected,
              'status': msg,
              'screenshot' : pngUrl,
-             'timing': "None"
+             'timing': game.gameParams.timing
          };
 
     console.log(game_stat);
