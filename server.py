@@ -63,7 +63,7 @@ def login_user():
         add_user_to_session(user)
         return redirect('/users/{}'.format(user.user_id))
 
-    flash(MESSAGES['wrong_credentials'])
+    # flash(MESSAGES['wrong_credentials'])
     return redirect('/')
 
 
@@ -74,7 +74,7 @@ def logout():
     """
 
     del session["current_user"]
-    flash(MESSAGES['logout'])
+    # flash(MESSAGES['logout'])
     return redirect('/')
 
 
@@ -93,7 +93,7 @@ def register_process():
         add_user_to_session(user)
         return redirect('/users/{}'.format(user.user_id))
 
-    flash(MESSAGES['register_failed'])
+    # flash(MESSAGES['register_failed'])
     return redirect("/")
 
 
@@ -170,12 +170,11 @@ def load_game(game_id):
     if current_user:
         saved_game = Game.get_game_by_id(game_id)
         del saved_game.last_saving["screenshot"]
-        game_data = json.dumps(saved_game.last_saving)        
+        game_data = json.dumps(saved_game.last_saving)
         session["saved_game"] = game_data
     else:
-        flash(MESSAGES['access_denied'])
-
-    return redirect("/")
+        # flash(MESSAGES['access_denied'])
+        return redirect("/")
 
 ############################# Helper Functions #############################
 def add_user_to_session(user):

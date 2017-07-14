@@ -20,22 +20,22 @@
          <h1> Welcome to Arcanoid</h1>
         </div> 
 
-        <div class="row">
-          <article>
-                <ul>
-                    <ol><button style="margin: 30px;" type="button" id="login" class="btn btn-success">Login</button></ol>
+        <div class="row" style="align-items: center;">
 
-                         <form id="login_form" action="/login_user" method="POST" style="display:none;">
-                                <div class="form-group">
-                                  Username <input type="username" class="form-control" id="username" placeholder="Enter username" name="username" required>
-                                </div>
-                                <div class="form-group">
-                                 Password <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" required>
-                                </div>
-                                <button type="submit" class="btn btn-default" style="margin: 30px;">I swear it is me</button>
-                              </form> 
-                      
-                    <ol>
+              <button style="margin: 30px;" type="button" id="login" class="btn btn-success">Login</button>
+
+              <form id="login_form"  action="/login_user" method="POST" style="display:none; " >
+                <div >
+                  Username <input type="username" class="form-control" id="username" placeholder="Enter username" name="username" required>
+                </div>
+                <div >
+                 Password <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-default" style="margin: 30px;">I swear it is me</button>
+              </form> 
+
+          </div>
+          <div class="row"  >
                         <button id="register" style="margin: 30px;" type="button" class="btn btn-warning">Register</button></ol>
 
                         <form id="register_form" action="/register" method="POST" style="display:none;">
@@ -50,15 +50,13 @@
                             </div>
                             <button type="submit" class="btn btn-default" style="margin: 30px;">Count me in!</button>
                           </form> 
-                    </ol>
-                    <ol>
+
+           </div>
+           <div class="row" >
                         <form action="/login_guest" method="get">
                             <button type="submit" id="guest" type="button" style="margin: 30px;" class="btn btn-danger">Play as a guest</button> 
                         </form>
-                    </ol>
-                 </ul>
-         </article>
-        </row>
+            </div>
 </container>
 
 <script>
@@ -71,7 +69,7 @@
 
     login_button.addEventListener("click", function (){
         register_form.setAttribute("style", "display:none;");
-        login_form.setAttribute("style", "display:block;");
+        login_form.setAttribute("style", "display:block; ");
     });
 
     register_button.addEventListener("click", function (){

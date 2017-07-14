@@ -141,6 +141,9 @@ def connect_to_db(app):
     db.app = app
     db.init_app(app)
 
+def example_data():
+    """Create some sample data."""
+
 
 if __name__ == "__main__":
 
