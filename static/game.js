@@ -19,7 +19,7 @@ var show_time = function(time){
     var minutes = Math.floor(time / 60);
     var seconds = time - minutes;
     
-    return minutes + ":" + seconds; 
+    return minutes + ":" + seconds;
 }
 
 //------- Keyboard and Mouse Handlers 
@@ -219,7 +219,7 @@ Game.prototype.collision_detection = function() {
     }
 }
 
-var greet_user = function(progress) {
+Game.prototype.greet_user = function(progress) {
     if (progress == 100) {
         return "Congrats with completing " + progress + "% of a game. With a score " + this.gameParams.score + ".";
     }
@@ -229,15 +229,16 @@ var greet_user = function(progress) {
 Game.prototype.stop_game = function() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     clearInterval(redrawIntervalID);
+    clearInterval(timer_event);
     redrawIntervalID = undefined;
     play_button.innerHTML = 'Play';
     save_button.setAttribute("style", "width:auto; display:none;");
-    msg_field.innerHTML = greet_user(Math.floor(progress));
+    msg_field.innerHTML = this.greet_user(Math.floor(progress));
     this.init();
 }
 
 Game.prototype.boundriesCheck = function() {
-    
+
     if(rightPressed && paddle.x < canvas.width - paddle.pWidth) {
                 paddle.x += 7;
             }
@@ -250,7 +251,7 @@ Game.prototype.boundriesCheck = function() {
     if(y + dy < Ball.radius) { dy = -dy;}
     
     if(y + dy > canvas.height-Ball.radius) {
-        if(x > paddle.x && x < paddle.x + paddle.pWidth) { dy = -dy; }        
+        if(x > paddle.x && x < paddle.x + paddle.pWidth) { dy = -dy; }
         else {
             this.gameParams.lives--;
             if(!this.gameParams.lives) {
@@ -270,7 +271,6 @@ Game.prototype.boundriesCheck = function() {
     x += dx,
     y += dy;
 }
-
 
 play = function(game, paddle, ball){
     if (game.gameParams.game_in_progress){
