@@ -1,0 +1,29 @@
+
+{% extends "_base.html" %}
+{% block title%} Arkanoid Project Profile for {{session.get('name')}}{% endblock %}
+{% block content %}
+<div class = "well" style="background-color: #c2d6c2; color: black; padding : 20px;" class="row">
+  <div>
+      <h3> Best results</h3>
+  </div>
+
+  <div>
+    {% if games_stats %}
+      {% for result in games_stats %}
+        {% if games_stats[result] != [] %}
+        <div> {{result.username}} </div>
+        <div> Timing {{games_stats[result][0][0]}} </div>
+        <div> Score {{games_stats[result][0][1]}} </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <p> {{best_time}} </p>
+  <p> {{best_score}}</p>
+
+<div>
+
+
+{% endblock %}
+

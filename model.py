@@ -129,11 +129,11 @@ def init_app():
     print "Connected to DB."
 
 
-def connect_to_db(app):
+def connect_to_db(app, db_uri="postgresql:///games"):
     """Connect the database to Flask app."""
 
     # Configure to use our database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres:///games'
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     # Print in log corresponding SQL queries
     app.config['SQLALCHEMY_ECHO'] = True
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

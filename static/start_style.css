@@ -26,12 +26,20 @@ body {
   height: 150px; 
 }
 
-#login_form, #register_form {
-  background: #7796ce;
+#login_form {
+  background: #b3ffb3;
   border-radius: 15px;
   padding: 20px; 
   width: 250px;
-  height: 250px; 
+  height: 200px;
+}
+
+#register_form {
+  background: #ffd480;
+  border-radius: 15px;
+  padding: 20px; 
+  width: 250px;
+  height: 250px;
 }
 
 article {

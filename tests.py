@@ -15,7 +15,7 @@ class FlaskTests(TestCase):
         app.config['TESTING'] = True
 
         # Connect to test database
-        # connect_to_db(app, "postgresql:///games")
+        connect_to_db(app, "postgresql:///tests")
         connect_to_db(app)
 
         # Create tables and add sample data
@@ -38,7 +38,7 @@ class FlaskTests(TestCase):
         """Find guest user by credentials."""
 
         User.get_guest_user() # user should exists
-        
+
         guest = User.get_user_by_credentials("guest", "password")
         self.assertIn(guest.username, "guest")
 

@@ -20,46 +20,46 @@
          <h1> Welcome to Arcanoid</h1>
         </div> 
 
-        <div class="row" style="align-items: center;">
-
-              <button style="margin: 30px;" type="button" id="login" class="btn btn-success">Login</button>
-
-              <form id="login_form"  action="/login_user" method="POST" style="display:none; " >
-                <div >
-                  Username <input type="username" class="form-control" id="username" placeholder="Enter username" name="username" required>
-                </div>
-                <div >
-                 Password <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" required>
-                </div>
-                <button type="submit" class="btn btn-default" style="margin: 30px;">I swear it is me</button>
-              </form> 
-
+        <div class="row">
+            <button style="margin: 30px;" type="button" id="login" class="btn btn-success">Login</button>
+            <form id="login_form"  action="/login_user" method="POST" style="display:none;" class="center-block">
+              <div >
+                Username <input type="username" class="form-control" id="username" placeholder="Enter username" name="username" required>
+              </div>
+              <div >
+               Password <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" required>
+              </div>
+              <button type="submit" class="btn btn-default" style="margin: 20px; background-color: #ffd9b3;">I swear it is me</button>
+            </form> 
           </div>
           <div class="row"  >
-                        <button id="register" style="margin: 30px;" type="button" class="btn btn-warning">Register</button></ol>
+            <button id="register" style="margin: 30px;" type="button" class="btn btn-warning">Register</button>
 
-                        <form id="register_form" action="/register" method="POST" style="display:none;">
-                            <div class="form-group">
-                              Username <input type="username" class="form-control" id="username" placeholder="Enter username" name="username" required>
-                            </div>
-                            <div class="form-group">
-                             Password <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" required>
-                            </div>
-                            <div class="checkbox">
-                              <label><input type="checkbox" id="want_avatar" name="want_avatar" value="true"> Want custom avatar?</label>
-                            </div>
-                            <button type="submit" class="btn btn-default" style="margin: 30px;">Count me in!</button>
-                          </form> 
-
+            <form id="register_form" action="/register" method="POST" style="display:none;" class="center-block">
+                <div class="form-group">
+                  Username <input type="username" class="form-control" id="username" placeholder="Enter username" name="username" required>
+                </div>
+                <div class="form-group">
+                 Password <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" required>
+                </div>
+                <div class="checkbox">
+                  <label><input type="checkbox" id="want_avatar" name="want_avatar" value="true"> Want a custom avatar?</label>
+                </div>
+                <button type="submit" class="btn btn-default" style="margin: 10px; background-color: #ffd9b3;">Count me in!</button>
+              </form> 
            </div>
            <div class="row" >
-                        <form action="/login_guest" method="get">
-                            <button type="submit" id="guest" type="button" style="margin: 30px;" class="btn btn-danger">Play as a guest</button> 
-                        </form>
+              <form action="/login_guest" method="get">
+                  <button type="submit" id="guest" type="button" style="margin: 30px;" class="btn btn-danger">Play as a guest</button> 
+              </form>
             </div>
 </container>
 
+<script src="http://code.jquery.com/jquery.js"></script>
 <script>
+
+
+$(document).ready(function(){
 
     login_button = document.getElementById("login");
     register_button = document.getElementById("register");
@@ -69,11 +69,16 @@
 
     login_button.addEventListener("click", function (){
         register_form.setAttribute("style", "display:none;");
-        login_form.setAttribute("style", "display:block; ");
+        login_form.removeAttribute("style");
     });
 
+    // $("login").click(function() { 
+    //   $("register_form").fadeOut();
+    //   $("login_form").fadeIn();
+    // });
+
     register_button.addEventListener("click", function (){
-        register_form.setAttribute("style", "display:block;");
+        register_form.removeAttribute("style");
         login_form.setAttribute("style", "display:none;");
     });
 
@@ -82,7 +87,7 @@
     login_button.setAttribute("style", text_style);
     register_button.setAttribute("style", text_style);
     guest_button.setAttribute("style", text_style);
-
+});
 
 </script>
 </body>
