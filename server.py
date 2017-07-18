@@ -179,69 +179,29 @@ def load_game(game_id):
 @app.route("/leaderboard")
 def leaders():
     """Render leaderboard with a statistical data """
-    games_stats = {} # for current user
 
-    total_users = len(User.query.all())
-    users = User.query.all()
+    if session.get("current_user"):
+        games_stats = {} # for all users
 
-    for user in users:
-        games_stats[user] =  [(game.last_saving["timing"], game.last_saving["score"]) 
-                                        for game in user.games if game.last_saving["status"] == "won"]
+        # total_users = len(User.query.all())
+        users = User.query.all()
 
-    best_time = best_time_among_users(users)
-    best_score = best_score_among_users(users)
+        for user in users:
+            # import pdb; pdb.set_trace()
+            games_stats[user] = user.get_best_score_and_time()
 
-
-    print best_time, best_score
-    
-    return  render_template("leaderboard.html",
-                            games_stats= games_stats,
-                            best_time= best_time,
-                            best_scores= best_score)
-
+        # best_time = best_time_among_users(users)
+        # best_score = best_score_among_users(users)
+        
+        return  render_template("leaderboard.html",
+                                games_stats= games_stats,
+                                best_time= (0, 0),
+                                best_score= (0, 0)
+                                )
+    else: 
+        return redirect("/")
 
 ############################# Helper Functions #############################
-def best_time_among_users(users):
-    """ Defining best time among users """
-
-    users_best_time = {}
-
-    def best_time(data):
-        """Finding the best time (smallest one)"""
-        best_val = 0
-
-        for datum in data:
-            if datum < best_val:
-                best_val = datum  
-
-        return best_val
-
-    for user in users:
-        users_best_time[user] = best_time([game.last_saving["timing"] for game in user.games])
-
-    return sorted(users_best_time.items(), key=lambda x: x[1])[0]
-
-
-def best_score_among_users(users):
-    """ Defining best score among users """
-
-    users_best_score = {}
-
-    def best_score(data):
-        """Finding the best scores (biggest one)"""
-        best_val = 0 
-
-        for datum in data:
-            if datum > best_val:
-                best_val = datum
-
-        return best_val 
-
-    for user in users:
-        users_best_score[user] = best_score([game.last_saving["score"] for game in user.games])
-
-    return sorted(users_best_score.items(), key=lambda x: x[1])[-1]
-
 
 def add_user_to_session(user):
     """Add user data to session """

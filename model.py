@@ -76,6 +76,24 @@ class User(db.Model):
             return user
              # function returns None by default
 
+
+    def get_best_score_and_time(self):
+        """ Get bast score and time for user"""
+
+        best_time = 10000
+        best_score = 0
+
+        for game in self.games:
+            if game.status == "won":
+                if best_time > game.timing:
+                    best_time = game.timing
+                if best_score < game.score:
+                    best_score = game.score
+
+        return (best_score, best_time)
+
+
+
 class Game(db.Model):
     """Game class"""
 
@@ -83,12 +101,14 @@ class Game(db.Model):
 
     game_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    # stats when finished - scores, level, lives-left  - csv
-    game_stats = db.Column(db.String(256), default="SAVED")
     # add column for Canvas Capture Img
     last_saving = db.Column(db.JSON, default=None) # or {}
+
+    status = db.Column(db.String(256))
+    timing = db.Column(db.Integer)
+    score = db.Column(db.Integer)
+ 
     t_stamp = db.Column(db.DateTime, default=datetime.now())
-    #  add level information to game
 
     # Add create game and return saved game from Game
 
@@ -97,7 +117,11 @@ class Game(db.Model):
         """Creates and returns new game object """
 
         game = Game(user_id=current_user,
-                    last_saving=data)
+                    last_saving=data,
+                    status=data["status"],
+                    timing=data["timing"],
+                    score=data["score"])
+
         db.session.add(game)
         db.session.commit()
 

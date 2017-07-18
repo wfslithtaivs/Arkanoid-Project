@@ -7,21 +7,44 @@
       <h3> Best results</h3>
   </div>
 
-  <div>
-    {% if games_stats %}
-      {% for result in games_stats %}
+  <br>
+  <p><h4> Best time </h4> </p>
+    <strong>{{best_time[1]}} </strong>
+  <br>
+  <p><h4> Best score </h4> </p>
+  <strong>{{best_score[1]}} </strong>
+
+
+  <br>
+  <br>
+
+  <h4> General stats </h4>
+ {% if games_stats %}
+   <div class="table-responsive">          
+    <table class="table table-hover table-sm">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Name</th>
+          <th>Score</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+       {% for result in games_stats %}
         {% if games_stats[result] != [] %}
-        <div> {{result.username}} </div>
-        <div> Timing {{games_stats[result][0][0]}} </div>
-        <div> Score {{games_stats[result][0][1]}} </div>
-        {% endif %}
-      {% endfor %}
-    {% endif %}
-  </div>
-
-  <p> {{best_time}} </p>
-  <p> {{best_score}}</p>
-
+        <tr>
+          <td>#</td>
+          <td>{{result.username}}</td>
+          <td>{{games_stats[result][0]}}</td>
+          <td>{{games_stats[result][1]}}</td>
+        </tr>
+          {% endif %}
+      {% endfor %}  
+      </tbody>
+    </table>
+    </div>  
+   {% endif %}
 <div>
 
 
