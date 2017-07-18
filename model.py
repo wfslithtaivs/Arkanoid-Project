@@ -104,10 +104,15 @@ class Game(db.Model):
     # add column for Canvas Capture Img
     last_saving = db.Column(db.JSON, default=None) # or {}
 
+
+    # Add indexes when creating frequently-accesible fields
+    # --->> Cache leaderboard and refresh it every time <<------
+    # and composite indexes
+        
     status = db.Column(db.String(256))
     timing = db.Column(db.Integer)
     score = db.Column(db.Integer)
- 
+
     t_stamp = db.Column(db.DateTime, default=datetime.now())
 
     # Add create game and return saved game from Game

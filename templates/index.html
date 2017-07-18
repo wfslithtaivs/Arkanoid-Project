@@ -1,56 +1,54 @@
-
 {% extends "_base.html" %}
 {% block title %} Arkanoid Project {% endblock %}
 {% block content %}
- 
-  <div class="row">
-    <h1 >Arkanoid Project </h1>
-  </div>
 
-  <div class="row">
-    <img src="../static/img/bricks.png" style="display:none;" id="brick_img" height="42" width="42">
-  </div>
+<div class="row">
+  <h1 >Arkanoid Project </h1>
+</div>
 
-  <div class="row">
-        <button style="width:auto;" class="btn btn-outline-primary" id="play-game" value="Play">Play</button> 
-  </div>
+<div class="row">
+  <button style="width:auto;" class="btn btn-outline-primary" id="play-game" value="Play">Play</button> 
+</div>  
 
-  <br >
-  <div class="row">
-    <canvas class= "well" style="background-color: #c2d6c2;" id="myCanvas" height="320" width="480" style="border:1px solid #d3d3d3;"> </canvas>
-  </div>
+<br>
 
-  <div class="row">
-    <p><text id="msg"></text></p>
-  </div>
+<div class="row">
+  <canvas class= "well" style="background-color: #c2d6c2; background-image: url(../static/img/canvas-default.png);" id="myCanvas" height="320" width="480" style="border:1px solid #d3d3d3;"> </canvas>
+</div>
 
-  <div class="row">
-      <button style="display:none;" class="btn btn-outline-success" id="save-game">Save</button>
-  </div>
-  <br>
+<div class="row">
+  <p><text id="msg"></text></p>
+</div>
 
-  <div class="row">
-    <div class="progress">
-      <div style="color: #c2d6c2;" id="myProgress" class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%"> 
-      </div>
+<div class="row">
+    <button style="display:none;" class="btn btn-outline-success" id="save-game">Save</button>
+</div>
+
+<a href="/leaderboard">Leaderboard</a>
+
+<div class="row">
+  <div class="progress">
+    <div style="color: #c2d6c2;" id="myProgress" class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%"> 
+    </div>
   </div>  
+</div>
 
-  <div class="row">
-    {% if session.get("saved_game") %}
-      <div id="saved_game" style="display: none;">{{session["saved_game"]}}</div>
-    {% else %}
-      <div id="saved_game" style="display: none;"></div>    
-    {% endif %}
-  </div>
+<div class="row">
+  {% if session.get("saved_game") %}
+    <div id="saved_game" style="display: none;">{{session["saved_game"]}}</div>
+  {% else %}
+    <div id="saved_game" style="display: none;"></div>    
+  {% endif %}
+</div>
 
-  <br >
-  <div class="row">
-      <p id="game_progress"></p>
-      <p id="game_stat"></p> 
-  </div>  
+<br>
 
-  <a href="/leaderboard">Leaderboard</a>
+<div class="row">
+    <p id="game_progress"></p>
+    <p id="game_stat"></p> 
+</div>  
 
-  <script src="http://code.jquery.com/jquery.js"></script>
-  <script src="../static/game.js"></script>
-  {% endblock %}
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="../static/game.js"></script>
+
+{% endblock %}

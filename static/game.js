@@ -2,7 +2,7 @@
 var canvas = document.getElementById("myCanvas");
 var play_button = document.getElementById("play-game");
 var save_button = document.getElementById("save-game");
-var elem = document.getElementById("myProgress");
+var progress_bar = document.getElementById("myProgress");
 var msg_field = document.getElementById("msg");
 var progress = 1;
 var ctx = canvas.getContext("2d");
@@ -158,7 +158,7 @@ init_bricks = function(loaded_bricks) {
 }
 
 Game.prototype.init = function(saved_game_data) {
-
+    progress_bar.style.width = '0%';
     // restore default params
     if (saved_game_data) {     
         x = saved_game_data["x"];
@@ -206,7 +206,7 @@ Game.prototype.collision_detection = function() {
                         dy > 0 ? dy += 0.5 : dy -= 0.5;
                         
                         progress = (this.gameParams.bricks_collected / Game.numBricks) * 100; 
-                        elem.style.width = progress + '%'; 
+                        progress_bar.style.width = progress + '%'; 
                         
                         if(this.gameParams.bricks_collected == Game.numBricks){
                             save_game(game, 'won');
@@ -238,7 +238,6 @@ Game.prototype.stop_game = function() {
 }
 
 Game.prototype.boundriesCheck = function() {
-
     if(rightPressed && paddle.x < canvas.width - paddle.pWidth) {
                 paddle.x += 7;
             }
@@ -323,11 +322,12 @@ function drawTime(time) {
 var game;
 
 (function () {
+    // canvas.style["background-image"] = "url(../static/img/canvas-default.png";
+
     game = new Game();
 
     var saved_game = document.getElementById("saved_game");
     var saved_game_data = saved_game.innerText;
-    // how to delete saved_game from session object? 
     saved_game.innerText = null;
 
     saved_game_data === "" ? 

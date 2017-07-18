@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-    <container>
+    <div class="container">
         <div class="row">
          <img id= "rounded-image" src="static/img/img_avatar.png">
          <h1> Welcome to Arcanoid</h1>
@@ -52,8 +52,8 @@
               <form action="/login_guest" method="get">
                   <button type="submit" id="guest" type="button" style="margin: 30px;" class="btn btn-danger">Play as a guest</button> 
               </form>
-            </div>
-</container>
+            </div>  
+  </div>
 
 <script src="http://code.jquery.com/jquery.js"></script>
 <script>
@@ -90,5 +90,15 @@ $(document).ready(function(){
 });
 
 </script>
+
+<footer class="footer">
+    <div class="container">
+      <div class="text-muted">Created by: Ekaterina Sergeeva</div>
+      <div class="text-muted">Contact information: <a href="mailto:wfslithtaivs@gmail.com">wfslithtaivs@gmail.com</a></div>
+    <div class="text-muted">Code base: <a href="https://github.com/wfslithtaivs/Arkanoid-Project" target="blank">github</a></div>
+  </div>
+</footer>
+
 </body>
+
 </html>
