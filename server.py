@@ -2,7 +2,7 @@
 
 from model import *
 from jinja2 import StrictUndefined
-from flask import Flask, jsonify, render_template, redirect, request, flash, session
+from flask import Flask, jsonify, render_template, redirect, request, session
 from flask_debugtoolbar import DebugToolbarExtension
 import urllib2
 import json
@@ -53,7 +53,7 @@ def login_guest():
 @app.route('/login_user', methods=['POST'])
 def login_user():
     """ Logs user in and add his ID in the (flask) session object if it.
-        If user doesn't exist: flashes message and redirect to default route
+        If user doesn't exist: redirect to default route
     """
 
     user = User.get_user_by_credentials(request.form.get("username"),
@@ -63,18 +63,15 @@ def login_user():
         add_user_to_session(user)
         return redirect('/users/{}'.format(user.user_id))
 
-    # flash(MESSAGES['wrong_credentials'])
     return redirect('/')
 
 
 @app.route('/logout')
 def logout():
-    """Logout user by deleting current_user from session object,
-       flashes sorry message on success and redirects to default route
+    """Logout user by deleting current_user from session object and redirects to default route
     """
 
     del session["current_user"]
-    # flash(MESSAGES['logout'])
     return redirect('/')
 
 
@@ -93,7 +90,6 @@ def register_process():
         add_user_to_session(user)
         return redirect('/users/{}'.format(user.user_id))
 
-    # flash(MESSAGES['register_failed'])
     return redirect("/")
 
 

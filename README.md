@@ -1,5 +1,5 @@
  
-# Arkanoid-Project
+# Project Arkanoid
 Featured Arkanoid Game 
 
 Tech stack: Python, Flask, JS 
