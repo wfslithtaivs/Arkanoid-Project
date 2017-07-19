@@ -3,12 +3,12 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from passlib.hash import pbkdf2_sha256
+from sqlalchemy import func
 
 # create ORM object to interact with db
 db = SQLAlchemy()
 
 ############################# Data Model #############################
-
 class User(db.Model):
     """User class"""
 
@@ -77,6 +77,28 @@ class User(db.Model):
              # function returns None by default
 
 
+    @staticmethod
+    def get_best_score():
+        """Get best score among users"""
+
+        best_score = db.session.query(func.max(Game.score)).filter(Game.status == "won").one()
+        score_user = db.session.query(Game.score, User.username).join(User).filter(Game.score == best_score, Game.status == "won").one()
+
+        return score_user
+
+
+    @staticmethod
+    def get_best_time():
+        """Get best time among users"""
+
+        #  Always remember about db.session.rollback() when debugging
+
+        max_timing = db.session.query(func.min(Game.timing)).filter(Game.status == "won").one()
+        time_user = db.session.query(Game.timing, User.username).join(User).filter(Game.timing == max_timing, Game.status == "won").one()
+
+        return time_user
+
+
     def get_best_score_and_time(self):
         """ Get bast score and time for user"""
 
@@ -93,7 +115,6 @@ class User(db.Model):
         return (best_score, best_time)
 
 
-
 class Game(db.Model):
     """Game class"""
 
@@ -108,7 +129,7 @@ class Game(db.Model):
     # Add indexes when creating frequently-accesible fields
     # --->> Cache leaderboard and refresh it every time <<------
     # and composite indexes
-        
+
     status = db.Column(db.String(256))
     timing = db.Column(db.Integer)
     score = db.Column(db.Integer)
@@ -137,17 +158,6 @@ class Game(db.Model):
         """Returns game by game_id """
 
         return Game.query.get(game_id)
-
-
-class Session(db.Model):
-    """Session class to keep track of user interactions with existing games"""
-
-    __tablename__ = "sessions"
-
-    session_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    t_stamp = db.Column(db.DateTime)
-
 
 ############################# Helper Functions #############################
 

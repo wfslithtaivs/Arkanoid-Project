@@ -102,7 +102,7 @@ Brick.prototype.draw = function(){
                 ctx.fillStyle = "#8A2BE2";
               }
                 else if (this.bWeight === 3) {
-                ctx.fillStyle = "#0095DD";
+                ctx.fillStyle = "#004080";
               }
     else if (this.bWeight <= 0) {
         return;
@@ -277,7 +277,7 @@ play = function(game, paddle, ball){
             ctx.beginPath();
             ball.draw();
             paddle.draw();       
-            ctx.fillStyle = "#0095DD";
+            ctx.fillStyle = "#004080";
             ctx.fill();
             
             for(var r = 0; r < Game.brickRowCount; r++) {
@@ -300,20 +300,20 @@ play = function(game, paddle, ball){
 // ---- Game state display    
 function drawScore(score) {
     ctx.font = "16px Arial";
-    ctx.fillStyle = "#0095DD";
+    ctx.fillStyle = "#004080";
     ctx.fillText("Score: "+score, 8, 20);
 }
 
 function drawLives(lives) {
     ctx.font = "16px Arial";
-    ctx.fillStyle = "#0095DD";
+    ctx.fillStyle = "#004080";
     ctx.fillText("Lives: "+lives, canvas.width-65, 20);
 }
 
 
 function drawTime(time) {
     ctx.font = "16px Arial";
-    ctx.fillStyle = "#0095DD";
+    ctx.fillStyle = "#004080";
     ctx.fillText("Time: "+time, canvas.width/2, 20);
 }
 

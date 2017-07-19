@@ -173,13 +173,13 @@ def leaders():
             # import pdb; pdb.set_trace()
             games_stats[user] = user.get_best_score_and_time()
 
-        # best_time = best_time_among_users(users)
-        # best_score = best_score_among_users(users)
+        best_score = User.get_best_score()
+        best_time = User.get_best_time()
         
         return  render_template("leaderboard.html",
                                 games_stats= games_stats,
-                                best_time= (0, 0),
-                                best_score= (0, 0)
+                                best_score= best_score,
+                                best_time= best_time
                                 )
     else: 
         return redirect("/")
