@@ -17,16 +17,20 @@
                         <p> Nice to see you, {{session.get("name")}}!</p>
                 </div>
                 <div class="col-sm-4">
-                      <h1> Project Arcanoid </h1>
+                      <h1> Project Arkanoid </h1>
                 </div>
+
                 <div class="col-sm-4">
                         <button onclick="window.location.href='/logout'" style="width:auto;" class="btn btn-outline-success">Logout</button>
                 </div>
+            </div>
+
+            <div class="row">
+                    <p> <span class="glyphicon glyphicon-fire"></span><a href="/leaderboard" style="color: yellow;"> Leaderboard </a><span class="glyphicon glyphicon-fire"></span> </p>
             </div>  
            
            {% block content %} {% endblock %}
 
-           <p> <a href="/leaderboard">Leaderboard</a> </p>
         </div>
     </div>
  </div>
