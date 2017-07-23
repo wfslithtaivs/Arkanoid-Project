@@ -74,7 +74,6 @@ class User(db.Model):
 
         if (user != None) and pbkdf2_sha256.verify(password, user.password_token):
             return user
-             # function returns None by default
 
 
     @staticmethod
@@ -122,14 +121,7 @@ class Game(db.Model):
 
     game_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    # add column for Canvas Capture Img
     last_saving = db.Column(db.JSON, default=None) # or {}
-
-
-    # Add indexes when creating frequently-accesible fields
-    # --->> Cache leaderboard and refresh it every time <<------
-    # and composite indexes
-
     status = db.Column(db.String(256))
     timing = db.Column(db.Integer)
     score = db.Column(db.Integer)
@@ -159,6 +151,14 @@ class Game(db.Model):
 
         return Game.query.get(game_id)
 
+    @staticmethod
+    def delete_game(game_id):
+        """Delete game by id"""
+
+        game = Game.query.get(game_id)
+        db.session.delete(game)
+        db.session.commit()
+
 ############################# Helper Functions #############################
 
 def init_app():
@@ -185,11 +185,7 @@ def example_data():
 
 
 if __name__ == "__main__":
-
     from flask import Flask
-
     app = Flask(__name__)
-
     connect_to_db(app)
-
     print "Connected to DB."

@@ -29,6 +29,7 @@ document.addEventListener("mousemove", mouseMoveHandler, false);
 
 var rightPressed = false;
 var leftPressed = false;
+// add whitespace handler for pause
 
 function keyDownHandler(e) {
     if(e.keyCode == 39) {
@@ -232,7 +233,7 @@ Game.prototype.stop_game = function() {
     clearInterval(timer_event);
     redrawIntervalID = undefined;
     play_button.innerHTML = 'Play';
-    save_button.setAttribute("style", "width:auto; display:none;");
+    save_button.setAttribute("style", "display:none;");
     msg_field.innerHTML = this.greet_user(Math.floor(progress));
     this.init();
 }
@@ -348,14 +349,14 @@ play_button.addEventListener("click", function (){
         msg_field.innerHTML = "";
         redrawIntervalID = setInterval(function () { play(game, paddle, ball); }, 15);
         play_button.innerHTML = 'Pause';
-        save_button.setAttribute("style", "width:auto; display:none;");
+        save_button.setAttribute("style", "display:none;");
    } 
    else if(play_button.innerHTML === "Pause") {
         clearInterval(timer_event);
         clearInterval(redrawIntervalID);
         redrawIntervalID = undefined;
         play_button.innerHTML = 'Play';
-        save_button.setAttribute("style", "width:auto;");
+        save_button.setAttribute("style", "font-size: 24px;");
    }
 });
 

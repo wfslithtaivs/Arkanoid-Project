@@ -3,6 +3,13 @@
 {% block title%} Arkanoid Project Profile for {{session.get('name')}}{% endblock %}
 {% block content %}
 <div class = "well" style="background-color: #c2d6c2; color: black; padding : 20px;" class="row">
+  
+ <div >
+      <form action="/">
+          <button type="submit" style="font-size: 24px;" class="btn btn-warning btn-lg btn-block">Play a new game</button>
+      </form>
+  </div>
+
   <div >
       <h3> Progress information</h3>
   </div>
@@ -39,20 +46,15 @@
         </table>
   {% endif %}
   </div>
-
-
-  <div >
-      <form action="/">
-          <button type="submit" class="btn btn-primary btn-lg btn-block">Play a new game</button>
-      </form>
-  </div>
-
   <br>
-
   <div>
 
+  <div >
+      <h3> Saved games</h3>
+  </div>
+
    <div class="table-responsive">          
-    <table class="table table-hover table-sm">
+    <table class="table table-bordered table-hover table-sm">
       <thead>
         <tr>
           <th>#</th>
@@ -70,7 +72,9 @@
           <td><img id = "game_screenshot" src="{{game.last_saving["screenshot"]}}" height="160" width="240"></img></td>
           <td>{{game.last_saving["score"]}}</td>
           <td>{{game.last_saving.get("timing", 0)}}</td>
-          <td> <a href="/load_game/{{game.game_id}}">Load saved game</a>
+          <td align="left"> <div><a href="/load_game/{{game.game_id}}">Load saved game</a></div>
+              <br>
+               <div><a href="/delete_game/{{game.game_id}}">Delete game</a></div>
           </td>
         </tr>
           {% endif %}
@@ -79,13 +83,9 @@
     </table>
     </div>
   </div>
-
   <div>
-
       <button id="show">Click me</button>
-
       <img style="display:none;" id="surprise" src="../static/img/dav_hooray.gif" width="480" height="192" frameBorder="0" class="giphy-embed" allowFullScreen></img>
-
   </div>
 </div>
 

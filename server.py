@@ -22,8 +22,6 @@ MESSAGES = {'logout': 'You were logged out. See you later!',
             'wrong_credentials': 'Wrong credentials',
             'access_denied': "Sorry, you are not allowed to see this page",
             'no_user_provided': 'No user provided'}
-
-
 ############################# Test area #############################
 
 ############################# User routes #############################
@@ -159,6 +157,15 @@ def load_game(game_id):
     return redirect("/")
 
 
+@app.route("/delete_game/<game_id>")
+def del_game(game_id):
+    """Delete game with by id"""
+
+    Game.delete_game(int(game_id))
+
+    return redirect("/users/{}".format(session['current_user']))
+
+
 @app.route("/leaderboard")
 def leaders():
     """Render leaderboard with a statistical data """
@@ -184,8 +191,8 @@ def leaders():
     else: 
         return redirect("/")
 
-############################# Helper Functions #############################
 
+############################# Helper Functions #############################
 def add_user_to_session(user):
     """Add user data to session """
 
@@ -206,11 +213,9 @@ if __name__ == "__main__":
     # Debug true
     app.debug = False # True to show FDT panel
     app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
-
     connect_to_db(app)
     # In case tables haven't been created, create them
     db.create_all()
-
     # Use the DebugToolbar
     DebugToolbarExtension(app)
     app.run(port=5000, host='0.0.0.0')
