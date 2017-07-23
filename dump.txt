@@ -228,9 +228,7 @@ COPY users (user_id, username, password_token, avatar) FROM stdin;
 2	UniqueUser	$pbkdf2-sha256$29000$3PtfC.H8f29tjfF.D0HIOQ$QYfbRKa8e1bu08Ga56sN6xxyi/7U2LHmFIZ8c2/bZnk	https://randomuser.me/api/portraits/men/0.jpg
 3	Alligator	$pbkdf2-sha256$29000$VCrlPOf8/5.TkhJCaI3x3g$Wo8SqOSYEuLw8wBw2MklewMJwzdnwYdzVNK5J6R4Ruc	https://randomuser.me/api/portraits/women/67.jpg
 4	Pony	$pbkdf2-sha256$29000$h9CaM.Zc6/0/xzgnZEyJ0Q$RBB.H4RpcCIU7qz.uhayVGfhNBybfzNmFgf1TMNXVI0	https://randomuser.me/api/portraits/men/82.jpg
-5	EvilPony	$pbkdf2-sha256$29000$790b47zXmpPSeo9RSgkBwA$GBusyYOYbiZpdUwgfE4u/YQmbVZ16fVEeOdYjZUR9Vo	https://randomuser.me/api/portraits/men/61.jpg
 6	guest	$pbkdf2-sha256$29000$cY6R0jonxJiTEkIoRUhpTQ$4Dg74CE9b1vLWiaDwRr.7OgVztPzkIDLqFFiz3jtUxU	../static/img/bowie_ipsum.jpg
-7	OneMorePony	$pbkdf2-sha256$29000$9t7bG.O8NyZEiDEGgFCKcQ$ZD4k5368SQhkvpmfYG8D9GsKDR9YTbzfYDG1b/ix9FI	https://randomuser.me/api/portraits/men/92.jpg
 8	user5	$pbkdf2-sha256$29000$KyVkrBXiHEPondMaY6y11g$Wb.iKQLddYXbHlpr5T6vkliyubUPrS/UMZNl1Zw1NTg	../static/img/bowie_ipsum.jpg
 \.
 

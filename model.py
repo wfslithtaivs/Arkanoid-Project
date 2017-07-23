@@ -111,6 +111,9 @@ class User(db.Model):
                 if best_score < game.score:
                     best_score = game.score
 
+        if best_time == 10000:
+            best_time = 0
+
         return (best_score, best_time)
 
 
