@@ -11,7 +11,7 @@ For game setup run in a shell:
 <code>$ source setup.sh </code>
 and visit corresponding local URL for play.
 
-Deployment is in progress.
+<a href="htmlcov/index.html">Testing</a> and deployment are in progress.
 
 <img src="screenshots/progress3.png">
 <img src="screenshots/progress4.png">
