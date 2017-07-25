@@ -10,3 +10,10 @@ Tech stack: Python, Flask, PostgreSQL, SQLAlchemy, Jinja, Javascript, JQuery, Aj
 For game setup run in a shell: vagrant up vagrant ssh $ source setup.sh and visit corresponding local URL for play.
 
 Deployment is in progress.
+
+<img src="screenshots/progress3.png">
+<img src="screenshots/progress4.png">
+<img src="screenshots/progress5.png">
+<img src="screenshots/progress6.png">
+<img src="screenshots/progress7.png">
+<img src="screenshots/progress8.png">
