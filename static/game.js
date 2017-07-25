@@ -159,6 +159,9 @@ init_bricks = function(loaded_bricks) {
 }
 
 Game.prototype.init = function(saved_game_data) {
+
+    console.log("Saved game data", saved_game_data);
+    
     progress_bar.style.width = '0%';
     // restore default params
     if (saved_game_data) {     
@@ -186,6 +189,7 @@ Game.prototype.init = function(saved_game_data) {
                             timing: 0};
         console.log(game);
         }
+    saved_game_data = false;
 }
 
 Game.prototype.collision_detection = function() {
@@ -333,7 +337,7 @@ var game;
 
     saved_game_data === "" ? 
                 saved_game_data = false : 
-                saved_game_data = JSON.parse(saved_game_data); 
+                saved_game_data = JSON.parse(saved_game_data);
 
     game.init(saved_game_data);
 

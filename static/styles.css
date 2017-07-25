@@ -10,8 +10,46 @@ body {
   opacity: 50%;
 }
 
-h1 {
-    color: #c2d6c2;
+
+b, strong {
+    /*font-weight: 700;*/
+    color: darkred;
+}
+
+h1{
+    /*color: #c2d6c2;*/
+    color: black;
+    font-size: 24px;
+}
+
+h2 {
+  color: black;
+  font-size: 22px;
+}
+
+h3, h4 {
+  color: black;
+  font-size: 18px;
+} 
+
+a {
+  color: darkblue;
+  font-size: 20px;
+
+}
+
+a.hovered {
+  color: darkred;
+  font-size: 20px;
+
+}
+
+#best_results {
+   background-color: #c2d6c2;  
+}
+
+#best_results th, td {
+  font-size: 18px;
 }
 
 #myCanvas {

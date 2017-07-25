@@ -80,8 +80,8 @@ class User(db.Model):
     def get_best_score():
         """Get best score among users"""
 
-        best_score = db.session.query(func.max(Game.score)).filter(Game.status == "won").one()
-        score_user = db.session.query(Game.score, User.username).join(User).filter(Game.score == best_score, Game.status == "won").one()
+        best_score = db.session.query(func.max(Game.score)).filter(Game.status == "won").first()
+        score_user = db.session.query(Game.score, User.username).join(User).filter(Game.score == best_score, Game.status == "won").first()
 
         return score_user
 
@@ -92,8 +92,8 @@ class User(db.Model):
 
         #  Always remember about db.session.rollback() when debugging
 
-        max_timing = db.session.query(func.min(Game.timing)).filter(Game.status == "won").one()
-        time_user = db.session.query(Game.timing, User.username).join(User).filter(Game.timing == max_timing, Game.status == "won").one()
+        max_timing = db.session.query(func.min(Game.timing)).filter(Game.status == "won").first()
+        time_user = db.session.query(Game.timing, User.username).join(User).filter(Game.timing == max_timing, Game.status == "won").first()
 
         return time_user
 
