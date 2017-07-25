@@ -186,6 +186,9 @@ def connect_to_db(app, db_uri="postgresql:///games"):
 def example_data():
     """Create some sample data."""
 
+    User.create_user("Kate", "longpass", None)
+    User.create_user("Long", "regularpass", None)
+    User.create_user("Critter", "shortpass", None)
 
 if __name__ == "__main__":
     from flask import Flask
